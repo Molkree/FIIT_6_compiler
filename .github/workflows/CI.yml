@@ -35,17 +35,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
+    - name: Build
+      run: dotnet build
 
-    - name: Restore NuGet packages
-      run: nuget restore SimpleLanguage.sln
-
-    - name: Build the Solution
-      run: msbuild SimpleLanguage.sln
-
-    - name: Run tests
-      run: powershell "& (Resolve-Path packages\NUnit.ConsoleRunner*\tools\nunit3-console.exe -Relative) SimpleLanguage.Tests\bin\Debug\SimpleLanguage.Tests.dll"
+    - name: Test
+      run: dotnet test
