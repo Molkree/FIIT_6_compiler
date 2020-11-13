@@ -43,7 +43,7 @@ namespace SimpleLanguage.Visitors
         public override void VisitVarListNode(VarListNode w)
         {
             PreVisit(w);
-            foreach (var v in w.vars)
+            foreach (var v in w.Vars)
             {
                 v.Visit(this);
             }

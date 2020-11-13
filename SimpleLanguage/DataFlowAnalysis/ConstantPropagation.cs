@@ -88,7 +88,7 @@ namespace SimpleLanguage
             return 0;
         }
 
-        public HashSet<string> untreatedTypes = new HashSet<string>()
+        public HashSet<string> UntreatedTypes { get; set; } = new HashSet<string>()
         {
             "OR",
             "AND",
@@ -118,7 +118,7 @@ namespace SimpleLanguage
                     second = instruction.Argument2;
                     operation = instruction.Operation;
 
-                    if (first == "True" || second == "True" || first == "False" || second == "False" || untreatedTypes.Contains(operation))
+                    if (first == "True" || second == "True" || first == "False" || second == "False" || UntreatedTypes.Contains(operation))
                     {
                         OUT[instruction.Result] = new LatticeValue(LatticeTypeData.NAC);
                     }
@@ -161,7 +161,7 @@ namespace SimpleLanguage
                         var first = instruction.Argument1;
 
                         OUT[instruction.Result] =
-                            untreatedTypes.Contains(operation)
+                            UntreatedTypes.Contains(operation)
                             ? new LatticeValue(LatticeTypeData.NAC)
                             : first == "True" || first == "False"
                             ? new LatticeValue(LatticeTypeData.NAC)

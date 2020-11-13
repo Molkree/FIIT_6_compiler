@@ -72,7 +72,7 @@ namespace SimpleLanguage
         /// <inheritdoc/>
         public override Direction Direction => Direction.Backward;
 
-        public Dictionary<int, InOutSet> dictInOut;
+        public Dictionary<int, InOutSet> DictInOut { get; set; }
 
         public void ExecuteInternal(ControlFlowGraph cfg)
         {
@@ -81,7 +81,7 @@ namespace SimpleLanguage
 
             foreach (var x in blocks)
             {
-                dictInOut.Add(cfg.VertexOf(x), new InOutSet());
+                DictInOut.Add(cfg.VertexOf(x), new InOutSet());
             }
 
             var isChanged = true;
@@ -92,14 +92,14 @@ namespace SimpleLanguage
                 {
                     var children = cfg.GetChildrenBasicBlocks(i);
 
-                    dictInOut[i].OUT =
+                    DictInOut[i].OUT =
                         children
-                        .Select(x => dictInOut[x.vertex].IN)
+                        .Select(x => DictInOut[x.vertex].IN)
                         .Aggregate(new HashSet<string>(), (a, b) => a.Union(b).ToHashSet());
 
-                    var pred = dictInOut[i].IN;
-                    dictInOut[i].IN = transferFunc.Transfer(blocks[i], dictInOut[i].OUT);
-                    isChanged = !dictInOut[i].IN.SetEquals(pred) || isChanged;
+                    var pred = DictInOut[i].IN;
+                    DictInOut[i].IN = transferFunc.Transfer(blocks[i], DictInOut[i].OUT);
+                    isChanged = !DictInOut[i].IN.SetEquals(pred) || isChanged;
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace SimpleLanguage
             return base.Execute(cfg);
         }
 
-        public LiveVariables() => dictInOut = new Dictionary<int, InOutSet>();
+        public LiveVariables() => DictInOut = new Dictionary<int, InOutSet>();
 
         public string ToString(ControlFlowGraph cfg)
         {
@@ -126,14 +126,14 @@ namespace SimpleLanguage
                 }
                 str.Append($"\n\n---IN set---\n");
                 str.Append("{");
-                foreach (var i in dictInOut[n].IN)
+                foreach (var i in DictInOut[n].IN)
                 {
                     str.Append($" {i}");
                 }
                 str.Append(" }");
                 str.Append($"\n\n---OUT set---\n");
                 str.Append("{");
-                foreach (var i in dictInOut[n].OUT)
+                foreach (var i in DictInOut[n].OUT)
                 {
                     str.Append($" {i}");
                 }

@@ -6,9 +6,9 @@ namespace SimpleLanguage
 {
     public class Region
     {
-        public IReadOnlyCollection<Region> IncludedRegions;
-        public IReadOnlyCollection<(Region, Region)> Edges;
-        public BasicBlock Initial;
+        public IReadOnlyCollection<Region> IncludedRegions { get; set; }
+        public IReadOnlyCollection<(Region, Region)> Edges { get; set; }
+        public BasicBlock Initial { get; set; }
 
         public Region(IReadOnlyCollection<Region> regions = null, IReadOnlyCollection<(Region, Region)> edges = null, BasicBlock initial = null)
         {

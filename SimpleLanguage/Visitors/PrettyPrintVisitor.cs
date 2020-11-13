@@ -5,7 +5,7 @@ namespace SimpleLanguage.Visitors
 {
     public class PrettyPrintVisitor : Visitor
     {
-        public string Text = "";
+        public string Text { get; set; } = "";
         private int Indent = 0;
 
         private string IndentStr() => new string(' ', Indent);
@@ -99,10 +99,10 @@ namespace SimpleLanguage.Visitors
 
         public override void VisitVarListNode(VarListNode w)
         {
-            Text += IndentStr() + "var " + w.vars[0].Name;
-            for (var i = 1; i < w.vars.Count; i++)
+            Text += IndentStr() + "var " + w.Vars[0].Name;
+            for (var i = 1; i < w.Vars.Count; i++)
             {
-                Text += ", " + w.vars[i].Name;
+                Text += ", " + w.Vars[i].Name;
             }
             Text += ";";
         }

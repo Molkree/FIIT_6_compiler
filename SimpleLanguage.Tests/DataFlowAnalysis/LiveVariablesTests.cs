@@ -120,7 +120,7 @@ print(c + a + b);
             var liveAct = new LiveVariables();
             liveAct.ExecuteInternal(cfg);
 
-            var listAct = liveAct.dictInOut
+            var listAct = liveAct.DictInOut
                 .Select(x => x.Value)
                 .Select(y => (y.IN as HashSet<string>, y.OUT as HashSet<string>));
             return listAct.ToList();
