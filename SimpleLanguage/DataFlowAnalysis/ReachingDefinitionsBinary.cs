@@ -64,7 +64,7 @@ namespace SimpleLanguage
                     {
                         if (instruction.Operation == "assign" ||
                             instruction.Operation == "input" ||
-                            instruction.Operation == "PLUS" && !instruction.Result.StartsWith("#"))
+                            instruction.Operation == "PLUS" && !instruction.Result.StartsWith("#", StringComparison.Ordinal))
                         {
                             defs.Add(instruction);
                         }
@@ -85,7 +85,7 @@ namespace SimpleLanguage
                         if (!used.Contains(instruction.Result) &&
                             (instruction.Operation == "assign" ||
                              instruction.Operation == "input" ||
-                             instruction.Operation == "PLUS" && !instruction.Result.StartsWith("#")))
+                             instruction.Operation == "PLUS" && !instruction.Result.StartsWith("#", StringComparison.Ordinal)))
                         {
                             gen.Add(new DefinitionInfo { BasicBlock = block, Instruction = instruction });
                             used.Add(instruction.Result);

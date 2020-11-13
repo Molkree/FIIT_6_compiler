@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SimpleLanguage
@@ -37,7 +38,7 @@ namespace SimpleLanguage
         public LatticeValue(LatticeTypeData type, int val)
         {
             Type = type;
-            ConstValue = val.ToString();
+            ConstValue = val.ToString(CultureInfo.InvariantCulture);
         }
 
         public override int GetHashCode()
@@ -108,7 +109,7 @@ namespace SimpleLanguage
             var instrs = basicBlock.GetInstructions();
             foreach (var instruction in basicBlock.GetInstructions())
             {
-                if (instruction.Result.StartsWith("#"))
+                if (instruction.Result.StartsWith("#", StringComparison.Ordinal))
                 {
                     OUT.Add(instruction.Result, new LatticeValue(LatticeTypeData.UNDEF));
 
@@ -125,18 +126,18 @@ namespace SimpleLanguage
                     else if (int.TryParse(first, out var v2) && OUT[second].Type == LatticeTypeData.CONST)
                     {
                         int.TryParse(OUT[second].ConstValue, out var val2);
-                        OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val2, v2, operation).ToString());
+                        OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val2, v2, operation).ToString(CultureInfo.InvariantCulture));
                     }
                     else if (OUT[first].Type == LatticeTypeData.CONST && int.TryParse(second, out var v1))
                     {
                         int.TryParse(OUT[first].ConstValue, out var val1);
-                        OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val1, v1, operation).ToString());
+                        OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val1, v1, operation).ToString(CultureInfo.InvariantCulture));
                     }
                     else if (OUT[first].Type == LatticeTypeData.CONST && OUT[second].Type == LatticeTypeData.CONST)
                     {
                         int.TryParse(OUT[first].ConstValue, out var val1);
                         int.TryParse(OUT[second].ConstValue, out var val2);
-                        OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val1, val2, operation).ToString());
+                        OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val1, val2, operation).ToString(CultureInfo.InvariantCulture));
                     }
                     else
                     {
@@ -179,7 +180,7 @@ namespace SimpleLanguage
                 }
             }
 
-            var temp_keys = OUT.Keys.Where(x => x.StartsWith("#")).ToList();
+            var temp_keys = OUT.Keys.Where(x => x.StartsWith("#", StringComparison.Ordinal)).ToList();
             foreach (var k in temp_keys)
             {
                 OUT.Remove(k);
@@ -314,6 +315,6 @@ namespace SimpleLanguage
             return base.Execute(graph);
         }
 
-        private bool CheckStr(string str) => str != "" && !str.StartsWith("#") && !str.StartsWith("L");
+        private bool CheckStr(string str) => str != "" && !str.StartsWith("#", StringComparison.Ordinal) && !str.StartsWith("L", StringComparison.Ordinal);
     }
 }

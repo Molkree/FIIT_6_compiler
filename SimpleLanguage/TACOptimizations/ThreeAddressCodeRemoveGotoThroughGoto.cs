@@ -32,7 +32,7 @@ namespace SimpleLanguage
                         newInstructions.Add(new Instruction(com0.Label, "NOT", com0.Argument1, "", tmpName));
                         newInstructions.Add(new Instruction("", "ifgoto", tmpName, com3.Label, ""));
 
-                        var label = com2.Label.StartsWith("L") && uint.TryParse(com2.Label.Substring(1), out _) ? "" : com2.Label;
+                        var label = com2.Label.StartsWith("L", StringComparison.Ordinal) && uint.TryParse(com2.Label.Substring(1), out _) ? "" : com2.Label;
                         newInstructions.Add(new Instruction(label, com2.Operation, com2.Argument1, com2.Argument2, com2.Result));
                         newInstructions.Add(com3.Copy());
 

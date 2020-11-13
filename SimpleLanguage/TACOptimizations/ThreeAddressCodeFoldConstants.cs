@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace SimpleLanguage
 {
@@ -68,13 +69,13 @@ namespace SimpleLanguage
                 case "EQLESS":
                     return (intArg1 <= intArg2).ToString();
                 case "PLUS":
-                    return (intArg1 + intArg2).ToString();
+                    return (intArg1 + intArg2).ToString(CultureInfo.InvariantCulture);
                 case "MINUS":
-                    return (intArg1 - intArg2).ToString();
+                    return (intArg1 - intArg2).ToString(CultureInfo.InvariantCulture);
                 case "MULT":
-                    return (intArg1 * intArg2).ToString();
+                    return (intArg1 * intArg2).ToString(CultureInfo.InvariantCulture);
                 case "DIV":
-                    return (intArg1 / intArg2).ToString();
+                    return (intArg1 / intArg2).ToString(CultureInfo.InvariantCulture);
                 default:
                     throw new InvalidOperationException();
             }

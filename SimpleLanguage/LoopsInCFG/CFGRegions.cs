@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SimpleLanguage
@@ -92,7 +93,7 @@ namespace SimpleLanguage
         private void CollapseCycle(IReadOnlyCollection<BasicBlock> cycle)
         {
             var bodyBlock = new BasicBlock();
-            bodyBlock.AddInstruction(new Instruction("", "", curID.ToString(), "", ""));
+            bodyBlock.AddInstruction(new Instruction("", "", curID.ToString(CultureInfo.InvariantCulture), "", ""));
             children.Add(bodyBlock, new List<BasicBlock>());
             var cycleEdges = new List<(BasicBlock, BasicBlock)>();
 
@@ -148,7 +149,7 @@ namespace SimpleLanguage
 
             // add new node
             var cycleBlock = new BasicBlock();
-            cycleBlock.AddInstruction(new Instruction("", "", curID.ToString(), "", ""));
+            cycleBlock.AddInstruction(new Instruction("", "", curID.ToString(CultureInfo.InvariantCulture), "", ""));
             blocks.Add(cycleBlock);
             children.Add(cycleBlock, new List<BasicBlock>());
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NUnit.Framework;
 using SimpleLanguage;
@@ -32,7 +33,8 @@ else
             {
                 Console.WriteLine($"{cfg.VertexOf(block)}  {block.GetInstructions()[0]}");
                 var children = cfg.GetChildrenBasicBlocks(cfg.VertexOf(block));
-                var childrenStr = string.Join(" | ", children.Select(v => v.vertex.ToString() + ": " + v.block.GetInstructions()[0].ToString()));
+                var childrenStr = string.Join(" | ", children.
+                    Select(v => v.vertex.ToString(CultureInfo.InvariantCulture) + ": " + v.block.GetInstructions()[0].ToString()));
                 Console.WriteLine($" children: {childrenStr}");
             }
 

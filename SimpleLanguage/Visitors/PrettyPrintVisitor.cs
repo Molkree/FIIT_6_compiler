@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ProgramTree;
 
 namespace SimpleLanguage.Visitors
@@ -12,7 +13,7 @@ namespace SimpleLanguage.Visitors
         private void IndentPlus() => Indent += 4;
         private void IndentMinus() => Indent -= 4;
         public override void VisitIdNode(IdNode id) => Text += id.Name;
-        public override void VisitIntNumNode(IntNumNode num) => Text += num.Num.ToString();
+        public override void VisitIntNumNode(IntNumNode num) => Text += num.Num.ToString(CultureInfo.CurrentCulture);
 
         private string GetOp(OpType t)
         {
@@ -224,6 +225,6 @@ namespace SimpleLanguage.Visitors
             Text += ");";
         }
 
-        public override void VisitBoolValNode(BoolValNode b) => Text += b.Val.ToString().ToLower();
+        public override void VisitBoolValNode(BoolValNode b) => Text += b.Val.ToString().ToLower(CultureInfo.CurrentCulture);
     }
 }

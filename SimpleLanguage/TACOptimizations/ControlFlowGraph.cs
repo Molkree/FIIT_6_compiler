@@ -78,7 +78,7 @@ namespace SimpleLanguage
                     case "goto":
                         var gotoOutLabel = instr.Argument1;
                         var gotoOutBlock = _basicBlocks.FindIndex(block =>
-                                string.Equals(block.GetInstructions().First().Label, gotoOutLabel));
+                                block.GetInstructions().First().Label == gotoOutLabel);
 
                         if (gotoOutBlock == -1)
                         {
@@ -92,7 +92,7 @@ namespace SimpleLanguage
                     case "ifgoto":
                         var ifgotoOutLabel = instr.Argument2;
                         var ifgotoOutBlock = _basicBlocks.FindIndex(block =>
-                                string.Equals(block.GetInstructions().First().Label, ifgotoOutLabel));
+                                block.GetInstructions().First().Label == ifgotoOutLabel);
 
                         if (ifgotoOutBlock == -1)
                         {
@@ -211,7 +211,7 @@ namespace SimpleLanguage
         public IEnumerable<Instruction> GetAssigns() =>
             _basicBlocks.Select(b => b.GetInstructions().Where(instr =>
                 instr.Operation == "assign" || instr.Operation == "input" ||
-                instr.Operation == "PLUS" && !instr.Result.StartsWith("#")
+                instr.Operation == "PLUS" && !instr.Result.StartsWith("#", StringComparison.OrdinalIgnoreCase)
             )).SelectMany(i => i);
 
         public int GetAmountOfAssigns() => GetAssigns().Count();

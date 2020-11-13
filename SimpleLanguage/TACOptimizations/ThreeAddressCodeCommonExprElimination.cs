@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SimpleLanguage
@@ -32,7 +33,9 @@ namespace SimpleLanguage
             var newInstructions = new List<Instruction>(instructions.Count);
 
             string uniqueExpr(Instruction instr) =>
-                string.Format(IsCommutative(instr) && string.Compare(instr.Argument1, instr.Argument2) > 0 ?
+                string.Format(CultureInfo.InvariantCulture,
+                IsCommutative(instr) &&
+                string.Compare(instr.Argument1, instr.Argument2, System.StringComparison.Ordinal) > 0 ?
                         "{2}{1}{0}" : "{0}{1}{2}", instr.Argument1, instr.Operation, instr.Argument2);
 
             void addLink(StringToStrings dict, string key, string value)
