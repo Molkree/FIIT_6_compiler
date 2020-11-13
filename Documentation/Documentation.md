@@ -1221,7 +1221,7 @@ private static IReadOnlyList<ChangeVisitor> ASTOptimizations { get; } = new List
 
 public static void Optimize(Parser parser, IReadOnlyList<ChangeVisitor> Optimizations = null)
 {
-    Optimizations = Optimizations ?? ASTOptimizations;
+    Optimizations ??= ASTOptimizations;
     var optInd = 0;
     do
     {
@@ -2210,7 +2210,7 @@ public static class ASTOptimizer
 
     public static void Optimize(Parser parser, IReadOnlyList<ChangeVisitor> Optimizations = null)
     {
-        Optimizations = Optimizations ?? ASTOptimizations;
+        Optimizations ??= ASTOptimizations;
         var optInd = 0;
         do
         {
@@ -2347,7 +2347,7 @@ public static class ASTOptimizer
 
     public static void Optimize(Parser parser, IReadOnlyList<ChangeVisitor> Optimizations = null)
     {
-        Optimizations = Optimizations ?? ASTOptimizations;
+        Optimizations ??= ASTOptimizations;
         var optInd = 0;
         do
         {
@@ -2585,7 +2585,7 @@ private static IReadOnlyList<ChangeVisitor> ASTOptimizations { get; } = new List
 
 public static void Optimize(Parser parser, IReadOnlyList<ChangeVisitor> Optimizations = null)
 {
-    Optimizations = Optimizations ?? ASTOptimizations;
+    Optimizations ??= ASTOptimizations;
     var optInd = 0;
     do
     {
@@ -2857,7 +2857,7 @@ public string[] TestOptExprSubEqualVar(string sourceCode) =>
 ``` {.csharp}
 public static void Optimize(Parser parser, IReadOnlyList<ChangeVisitor> Optimizations = null)
 {
-    Optimizations = Optimizations ?? ASTOptimizations;
+    Optimizations ??= ASTOptimizations;
     var optInd = 0;
     do
     {
