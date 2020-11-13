@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using SimpleLang.Visitors;
+using SimpleLanguage.Visitors;
 
 namespace SimpleLanguage.Tests.AST
 {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLang;
-using SimpleLang.DataFlowAnalysis;
+using SimpleLanguage;
+using SimpleLanguage.DataFlowAnalysis;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {

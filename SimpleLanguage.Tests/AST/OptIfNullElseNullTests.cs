@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using ProgramTree;
-using SimpleLang.Visitors;
+using SimpleLanguage.Visitors;
 
 namespace SimpleLanguage.Tests.AST
 {

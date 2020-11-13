@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using SimpleLang;
-using SimpleLang.Visitors;
+using SimpleLanguage;
+using SimpleLanguage.Visitors;
 using SimpleParser;
 
 namespace SimpleLanguage.Tests.AST

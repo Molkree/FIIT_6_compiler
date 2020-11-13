@@ -1,5 +1,5 @@
 ﻿using System;
-using SimpleLang.Visitors;
+using SimpleLanguage.Visitors;
 using SimpleParser;
 using SimpleScanner;
 

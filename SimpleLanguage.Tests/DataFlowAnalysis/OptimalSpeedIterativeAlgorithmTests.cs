@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using SimpleLang;
+using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {

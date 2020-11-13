@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using SimpleLang;
+using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.CFG
 {

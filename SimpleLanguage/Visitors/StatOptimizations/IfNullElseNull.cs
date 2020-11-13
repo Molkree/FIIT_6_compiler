@@ -1,0 +1,17 @@
+﻿using ProgramTree;
+
+namespace SimpleLanguage.Visitors
+{
+    public class IfNullElseNull : ChangeVisitor
+    {
+        public override void PostVisit(Node n)
+        {
+            if (n is IfElseNode ifn &&
+                (ifn.FalseStat is EmptyNode || ifn.FalseStat == null) &&
+                (ifn.TrueStat is EmptyNode || ifn.TrueStat == null))
+            {
+                ReplaceStat(ifn, new EmptyNode());
+            }
+        }
+    }
+}

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SimpleLang;
-using SimpleLang.DataFlowAnalysis;
-using SimpleLang.Visitors;
+using SimpleLanguage;
+using SimpleLanguage.DataFlowAnalysis;
+using SimpleLanguage.Visitors;
 using SimpleParser;
 using SimpleScanner;
 

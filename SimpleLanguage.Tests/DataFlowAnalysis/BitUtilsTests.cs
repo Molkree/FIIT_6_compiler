@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLang;
+using SimpleLanguage;
 
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis

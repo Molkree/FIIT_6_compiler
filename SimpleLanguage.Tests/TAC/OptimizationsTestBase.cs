@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SimpleLang;
-using SimpleLang.Visitors;
+using SimpleLanguage;
+using SimpleLanguage.Visitors;
 using SimpleParser;
 using SimpleScanner;
 
