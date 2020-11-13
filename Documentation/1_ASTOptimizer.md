@@ -24,7 +24,7 @@
 ```csharp
 public static void Optimize(Parser parser, IReadOnlyList<ChangeVisitor> Optimizations = null)
 {
-    Optimizations = Optimizations ?? ASTOptimizations;
+    Optimizations ??= ASTOptimizations;
     var optInd = 0;
     do
     {
