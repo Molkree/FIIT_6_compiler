@@ -8,7 +8,6 @@ using SimpleScanner;
 
 namespace SimpleCompiler
 {
-    
     public class SimpleCompilerMain
     {
         public static void Main()
