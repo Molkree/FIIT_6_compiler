@@ -7,7 +7,7 @@ namespace SimpleLanguage.Tests.DataFlowAnalysis
     [TestFixture]
     internal class ReachingDefinitionsBinaryTests : OptimizationsTestBase
     {
-        private (List<BasicBlock> basicBlocks, InOutData<IEnumerable<Instruction>> inOutInfo) GenGraphAndGetInOutInfo(string program)
+        private static (List<BasicBlock> basicBlocks, InOutData<IEnumerable<Instruction>> inOutInfo) GenGraphAndGetInOutInfo(string program)
         {
             var blocks = GenBlocks(program);
             var cfg = new ControlFlowGraph(blocks);
@@ -96,7 +96,7 @@ c = b;
 
             var expected = blocks[0].GetInstructions()
                 .Skip(2).Take(2)
-                .Append(blocks[0].GetInstructions().Last());
+                .Append(blocks[0].GetInstructions()[blocks[0].GetInstructions().Count - 1]);
             CollectionAssert.AreEquivalent(expected, inOutInfo[blocks[0]].Out);
         }
 

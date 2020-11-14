@@ -284,7 +284,7 @@ namespace SimpleIDE
                         break;
                     case "Достигающие определения":
                         var reachDef = new ReachingDefinitionsOptimization();
-                        reachDef.DeleteDeadCode(cfg);
+                        ReachingDefinitionsOptimization.DeleteDeadCode(cfg);
                         break;
                 }
             }

@@ -26,7 +26,7 @@ namespace SimpleLanguage
             var assigns = graph.GetAssigns().ToList();
 
             var idByInstruction = assigns
-                .Select((value, index) => new { value, index })
+                .Select((value, index) => (value, index))
                 .ToDictionary(x => x.value, x => x.index);
 
             var instructions = assigns;
@@ -36,13 +36,13 @@ namespace SimpleLanguage
             var inOutData = base.Execute(graph, useRenumbering);
 
             var modifiedBackData = inOutData
-                .Select(x => new { x.Key, ModifyInOutBack = ModifyInOutBack(x.Value, instructions) })
+                .Select(x => (x.Key, ModifyInOutBack: ModifyInOutBack(x.Value, instructions)))
                 .ToDictionary(x => x.Key, x => x.ModifyInOutBack);
 
             return new InOutData<IEnumerable<Instruction>>(modifiedBackData);
         }
 
-        private (IEnumerable<Instruction>, IEnumerable<Instruction>) ModifyInOutBack((BitArray, BitArray) inOut, IReadOnlyList<Instruction> instructions)
+        private static (IEnumerable<Instruction>, IEnumerable<Instruction>) ModifyInOutBack((BitArray, BitArray) inOut, IReadOnlyList<Instruction> instructions)
         {
             var (In, Out) = inOut;
             return (BitUtils.TurnIntoInstructions(In, instructions), BitUtils.TurnIntoInstructions(Out, instructions));
@@ -88,7 +88,7 @@ namespace SimpleLanguage
                              instruction.Operation == "PLUS" && !instruction.Result.StartsWith("#", StringComparison.Ordinal)))
                         {
                             gen.Add(new DefinitionInfo { BasicBlock = block, Instruction = instruction });
-                            used.Add(instruction.Result);
+                            _ = used.Add(instruction.Result);
                         }
                         foreach (var killedDef in defs_groups[instruction.Result].Where(x => x != instruction))
                         {

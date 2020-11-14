@@ -7,13 +7,13 @@ namespace SimpleLanguage
 
     public class ReachingDefinitionsOptimization
     {
-        public void DeleteDeadCode(ControlFlowGraph graph)
+        public static void DeleteDeadCode(ControlFlowGraph graph)
         {
             var usedVars = CreateUsedVarsSets(graph);
             var info = new ReachingDefinitions().Execute(graph);
 
             var usedDefinitions = new HashSet<Instruction>(
-                info[graph.GetCurrentBasicBlocks().Last()].In,
+                info[graph.GetCurrentBasicBlocks()[graph.GetCurrentBasicBlocks().Count - 1]].In,
                 new InstructionComparer());
 
             var possibleOperationTypes = new[] { "assign", "input", "PLUS" };
@@ -32,14 +32,14 @@ namespace SimpleLanguage
 
                         // find first assign in current block that rewrites variable
                         var newDefIndex = block.GetInstructions()
-                            .Select((t, i) => new { Instruction = t, Index = i })
+                            .Select((t, i) => (Instruction: t, Index: i))
                             .First(t => possibleOperationTypes.Contains(t.Instruction.Operation) && t.Instruction.Result == variable)
                             .Index;
 
                         var blockWithOldDef = graph.GetCurrentBasicBlocks()
                             .Single(z => z.GetInstructions().Any(t => t == oldDef));
                         var oldDefIndex = blockWithOldDef.GetInstructions()
-                            .Select((t, i) => new { Instruction = t, Index = i })
+                            .Select((t, i) => (Instruction: t, Index: i))
                             .Single(t => t.Instruction == oldDef)
                             .Index;
 
@@ -48,7 +48,7 @@ namespace SimpleLanguage
                             || IsUsedInOriginalBlock(blockWithOldDef, variable, oldDefIndex)
                             || IsUsedInOtherBlocks(graph, blockWithOldDef, oldDef, usedVars, info))
                         {
-                            usedDefinitions.Add(oldDef);
+                            _ = usedDefinitions.Add(oldDef);
                             continue;
                         }
 
@@ -65,7 +65,7 @@ namespace SimpleLanguage
             }
         }
 
-        private bool IsUsedInCurrentBlock(BasicBlock block, string variable, int newDefIndex)
+        private static bool IsUsedInCurrentBlock(BasicBlock block, string variable, int newDefIndex)
         {
             for (var i = 0; i <= newDefIndex; ++i)
             {
@@ -78,9 +78,9 @@ namespace SimpleLanguage
             return false;
         }
 
-        private bool IsUsedInOriginalBlock(BasicBlock block, string variable, int oldDefIndex)
+        private static bool IsUsedInOriginalBlock(BasicBlock block, string variable, int oldDefIndex)
         {
-            for (var i = oldDefIndex + 1; i < block.GetInstructions().Count(); ++i)
+            for (var i = oldDefIndex + 1; i < block.GetInstructions().Count; ++i)
             {
                 if (block.GetInstructions()[i].Argument1 == variable
                     || block.GetInstructions()[i].Argument2 == variable)
@@ -91,7 +91,7 @@ namespace SimpleLanguage
             return false;
         }
 
-        private bool IsUsedInOtherBlocks(
+        private static bool IsUsedInOtherBlocks(
             ControlFlowGraph graph,
             BasicBlock blockWithDefinition,
             Instruction definitionToCheck,
@@ -150,7 +150,7 @@ namespace SimpleLanguage
             return false;
         }
 
-        private Dictionary<BasicBlock, HashSet<string>> CreateUsedVarsSets(ControlFlowGraph graph)
+        private static Dictionary<BasicBlock, HashSet<string>> CreateUsedVarsSets(ControlFlowGraph graph)
         {
             var result = new Dictionary<BasicBlock, HashSet<string>>();
 
@@ -161,11 +161,11 @@ namespace SimpleLanguage
                 {
                     if (IsVariable(instruction.Argument1))
                     {
-                        result[block].Add(instruction.Argument1);
+                        _ = result[block].Add(instruction.Argument1);
                     }
                     if (IsVariable(instruction.Argument2))
                     {
-                        result[block].Add(instruction.Argument2);
+                        _ = result[block].Add(instruction.Argument2);
                     }
                 }
             }
@@ -173,7 +173,7 @@ namespace SimpleLanguage
             return result;
         }
 
-        private bool IsVariable(string s) =>
+        private static bool IsVariable(string s) =>
             !string.IsNullOrEmpty(s)
             && !int.TryParse(s, out _)
             && !(s == "true")

@@ -243,7 +243,7 @@ while i > 0
         public IEnumerable<string> TestReachingDefinitionsOptimization(string sourceCode, bool preOptimize = false)
         {
             var graph = preOptimize ? BuildTACOptimizeCFG(sourceCode) : GenCFG(sourceCode);
-            new ReachingDefinitionsOptimization().DeleteDeadCode(graph);
+            ReachingDefinitionsOptimization.DeleteDeadCode(graph);
             return graph.GetInstructions().Select(i => i.ToString());
         }
     }

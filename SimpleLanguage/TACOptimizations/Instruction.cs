@@ -38,75 +38,36 @@
         public override string ToString()
         {
             var label = Label != "" ? Label + ": " : "";
-            switch (Operation)
+            return Operation switch
             {
-                case "assign":
-                    return label + Result + " = " + Argument1;
-                case "ifgoto":
-                    return $"{label}if {Argument1} goto {Argument2}";
-                case "goto":
-                    return $"{label}goto {Argument1}";
-                case "input":
-                    return $"{label}input {Result}";
-                case "print":
-                    return $"{label}print {Argument1}";
-                case "NOT":
-                case "UNMINUS":
-                    return $"{label}{Result} = {ConvertToMathNotation(Operation)}{Argument1}";
-                case "OR":
-                case "AND":
-                case "EQUAL":
-                case "NOTEQUAL":
-                case "LESS":
-                case "GREATER":
-                case "EQGREATER":
-                case "EQLESS":
-                case "PLUS":
-                case "MINUS":
-                case "MULT":
-                case "DIV":
-                    return $"{label}{Result} = {Argument1} {ConvertToMathNotation(Operation)} {Argument2}";
-                case "noop":
-                    return $"{label}noop";
-                default:
-                    return $"label: {Label}; op {Operation}; arg1: {Argument1}; arg2: {Argument2}; res: {Result}";
-            }
+                "assign" => label + Result + " = " + Argument1,
+                "ifgoto" => $"{label}if {Argument1} goto {Argument2}",
+                "goto" => $"{label}goto {Argument1}",
+                "input" => $"{label}input {Result}",
+                "print" => $"{label}print {Argument1}",
+                "NOT" or "UNMINUS" => $"{label}{Result} = {ConvertToMathNotation(Operation)}{Argument1}",
+                "OR" or "AND" or "EQUAL" or "NOTEQUAL" or "LESS" or "GREATER" or "EQGREATER" or "EQLESS" or "PLUS" or "MINUS" or "MULT" or "DIV" => $"{label}{Result} = {Argument1} {ConvertToMathNotation(Operation)} {Argument2}",
+                "noop" => $"{label}noop",
+                _ => $"label: {Label}; op {Operation}; arg1: {Argument1}; arg2: {Argument2}; res: {Result}",
+            };
         }
 
-        private string ConvertToMathNotation(string operation)
+        private static string ConvertToMathNotation(string operation) => operation switch
         {
-            switch (operation)
-            {
-                case "OR":
-                    return "or";
-                case "AND":
-                    return "and";
-                case "EQUAL":
-                    return "==";
-                case "NOTEQUAL":
-                    return "!=";
-                case "LESS":
-                    return "<";
-                case "GREATER":
-                    return ">";
-                case "EQGREATER":
-                    return ">=";
-                case "EQLESS":
-                    return "<=";
-                case "PLUS":
-                    return "+";
-                case "MINUS":
-                case "UNMINUS":
-                    return "-";
-                case "MULT":
-                    return "*";
-                case "DIV":
-                    return "/";
-                case "NOT":
-                    return "!";
-                default:
-                    return operation;
-            }
-        }
+            "OR" => "or",
+            "AND" => "and",
+            "EQUAL" => "==",
+            "NOTEQUAL" => "!=",
+            "LESS" => "<",
+            "GREATER" => ">",
+            "EQGREATER" => ">=",
+            "EQLESS" => "<=",
+            "PLUS" => "+",
+            "MINUS" or "UNMINUS" => "-",
+            "MULT" => "*",
+            "DIV" => "/",
+            "NOT" => "!",
+            _ => operation,
+        };
     }
 }

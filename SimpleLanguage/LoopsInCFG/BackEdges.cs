@@ -116,7 +116,7 @@ namespace SimpleLanguage
                 BlockColorDictionary[block] = BlockColor.Black;
                 return true;
             }
-            private bool ContainsEdge(IReadOnlyCollection<Edge> edges, Edge edgeGraph)
+            private static bool ContainsEdge(IReadOnlyCollection<Edge> edges, Edge edgeGraph)
             {
                 foreach (var edge in edges)
                 {
