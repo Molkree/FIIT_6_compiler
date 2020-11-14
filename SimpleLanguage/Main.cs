@@ -88,13 +88,13 @@ namespace SimpleCompiler
 
                     foreach (var block in cfg.GetCurrentBasicBlocks())
                     {
-                        Console.WriteLine($"{cfg.VertexOf(block)}  {block.GetInstructions().First()}");
+                        Console.WriteLine($"{cfg.VertexOf(block)}  {block.GetInstructions()[0]}");
                         var children = cfg.GetChildrenBasicBlocks(cfg.VertexOf(block));
-                        var childrenStr = string.Join(" | ", children.Select(v => v.block.GetInstructions().First().ToString()));
+                        var childrenStr = string.Join(" | ", children.Select(v => v.block.GetInstructions()[0].ToString()));
                         Console.WriteLine($" children: {childrenStr}");
 
                         var parents = cfg.GetParentsBasicBlocks(cfg.VertexOf(block));
-                        var parentsStr = string.Join(" | ", parents.Select(v => v.block.GetInstructions().First().ToString()));
+                        var parentsStr = string.Join(" | ", parents.Select(v => v.block.GetInstructions()[0].ToString()));
                         Console.WriteLine($" parents: {parentsStr}");
                     }
 
@@ -158,7 +158,7 @@ namespace SimpleCompiler
             {
                 Console.WriteLine("Syntax Error. " + e.Message);
             }
-            Console.ReadLine();
+            _ = Console.ReadLine();
         }
     }
 }

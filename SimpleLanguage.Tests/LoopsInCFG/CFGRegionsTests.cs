@@ -19,7 +19,7 @@ if b != 2
 a = 8;
 ");
             var result = new CFGRegions(cfg);
-            result.Regions.Last().Print();
+            result.Regions[result.Regions.Count - 1].Print();
 
             var actual = result.Regions.Select(x => (x.Edges?.Count ?? 0, x.IncludedRegions?.Count ?? 0));
             var expected = new[]
@@ -48,7 +48,7 @@ for x = 1, 10
 c = a + b;
 ");
             var result = new CFGRegions(cfg);
-            result.Regions.Last().Print();
+            result.Regions[result.Regions.Count - 1].Print();
 
             var actual = result.Regions.Select(x => (x.Edges?.Count ?? 0, x.IncludedRegions?.Count ?? 0));
             var expected = new[]
@@ -84,7 +84,7 @@ for x = 1, 10
 c = a + b;
 ");
             var result = new CFGRegions(cfg);
-            result.Regions.Last().Print();
+            result.Regions[result.Regions.Count - 1].Print();
 
             var actual = result.Regions.Select(x => (x.Edges?.Count ?? 0, x.IncludedRegions?.Count ?? 0));
             var expected = new[]
@@ -129,7 +129,7 @@ for x = 1, 10
             var loops = NaturalLoop.GetAllNaturalLoops(cfg);
             Assert.AreEqual(3, loops.Count);
             var result = new CFGRegions(cfg);
-            result.Regions.Last().Print();
+            result.Regions[result.Regions.Count - 1].Print();
 
             var actual = result.Regions.Select(x => (x.Edges?.Count ?? 0, x.IncludedRegions?.Count ?? 0));
             var expected = new[]

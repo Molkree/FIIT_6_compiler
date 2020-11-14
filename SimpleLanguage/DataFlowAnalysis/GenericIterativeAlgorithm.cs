@@ -12,12 +12,12 @@ namespace SimpleLanguage
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("++++");
+            _ = sb.AppendLine("++++");
             foreach (var kv in this)
             {
-                sb.AppendLine(kv.Key + ":\n" + kv.Value);
+                _ = sb.AppendLine(kv.Key + ":\n" + kv.Value);
             }
-            sb.AppendLine("++++");
+            _ = sb.AppendLine("++++");
             return sb.ToString();
         }
 
@@ -115,8 +115,8 @@ namespace SimpleLanguage
             out Func<T, T, (T, T)> combine)
         {
             var start = Direction == Direction.Backward
-                ? graph.GetCurrentBasicBlocks().Last()
-                : graph.GetCurrentBasicBlocks().First();
+                ? graph.GetCurrentBasicBlocks()[graph.GetCurrentBasicBlocks().Count - 1]
+                : graph.GetCurrentBasicBlocks()[0];
             blocks = graph.GetCurrentBasicBlocks().Except(new[] { start });
 
             if (useRenumbering)

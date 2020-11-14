@@ -58,7 +58,7 @@ namespace SimpleLanguage
             _basicBlocks.Add(new BasicBlock(new List<Instruction> { new Instruction("#out", "noop", "", "", "") }));
 
 
-            _blockToVertex = _basicBlocks.Select((b, i) => new { b, i }).ToDictionary(v => v.b, v => v.i);
+            _blockToVertex = _basicBlocks.Select((b, i) => (b, i)).ToDictionary(v => v.b, v => v.i);
 
             _children = new List<List<(int, BasicBlock)>>(_basicBlocks.Count);
             _parents = new List<List<(int, BasicBlock)>>(_basicBlocks.Count);
@@ -72,17 +72,17 @@ namespace SimpleLanguage
             for (var i = 0; i < _basicBlocks.Count; ++i)
             {
                 var instructions = _basicBlocks[i].GetInstructions();
-                var instr = instructions.Last();
+                var instr = instructions[instructions.Count - 1];
                 switch (instr.Operation)
                 {
                     case "goto":
                         var gotoOutLabel = instr.Argument1;
                         var gotoOutBlock = _basicBlocks.FindIndex(block =>
-                                block.GetInstructions().First().Label == gotoOutLabel);
+                                block.GetInstructions()[0].Label == gotoOutLabel);
 
                         if (gotoOutBlock == -1)
                         {
-                            throw new Exception($"label {gotoOutLabel} not found");
+                            throw new ArgumentException($"label {gotoOutLabel} not found");
                         }
 
                         _children[i].Add((gotoOutBlock, _basicBlocks[gotoOutBlock]));
@@ -92,11 +92,11 @@ namespace SimpleLanguage
                     case "ifgoto":
                         var ifgotoOutLabel = instr.Argument2;
                         var ifgotoOutBlock = _basicBlocks.FindIndex(block =>
-                                block.GetInstructions().First().Label == ifgotoOutLabel);
+                                block.GetInstructions()[0].Label == ifgotoOutLabel);
 
                         if (ifgotoOutBlock == -1)
                         {
-                            throw new Exception($"label {ifgotoOutLabel} not found");
+                            throw new ArgumentException($"label {ifgotoOutLabel} not found");
                         }
 
                         _children[i].Add((ifgotoOutBlock, _basicBlocks[ifgotoOutBlock]));
@@ -128,7 +128,7 @@ namespace SimpleLanguage
                     tmpBasicBlock[i] = null;
                 }
             }
-            tmpBasicBlock.RemoveAll(x => x == null);
+            _ = tmpBasicBlock.RemoveAll(x => x == null);
             return tmpBasicBlock.Skip(1).Take(tmpBasicBlock.Count - 2).ToList();
         }
 
@@ -190,6 +190,8 @@ namespace SimpleLanguage
                         case VertexStatus.Done:
                             var edgeType = (pre[v] < pre[vertex]) ? EdgeType.Cross : EdgeType.Advancing;
                             _classifiedEdges.Add((vertex, v, edgeType));
+                            break;
+                        default:
                             break;
                     }
                 }

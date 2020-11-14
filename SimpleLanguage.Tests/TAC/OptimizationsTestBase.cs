@@ -18,7 +18,7 @@ namespace SimpleLanguage.Tests
             var scanner = new Scanner();
             scanner.SetSource(sourceCode, 0);
             var parser = new Parser(scanner);
-            parser.Parse();
+            _ = parser.Parse();
             var fillParents = new FillParentsVisitor();
             parser.root.Visit(fillParents);
             var threeAddrCodeVisitor = new ThreeAddrGenVisitor();

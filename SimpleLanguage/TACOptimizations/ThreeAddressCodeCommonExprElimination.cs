@@ -8,20 +8,11 @@ namespace SimpleLanguage
 
     public static class ThreeAddressCodeCommonExprElimination
     {
-        public static bool IsCommutative(Instruction instr)
+        public static bool IsCommutative(Instruction instr) => instr.Operation switch
         {
-            switch (instr.Operation)
-            {
-                case "OR":
-                case "AND":
-                case "EQUAL":
-                case "NOTEQUAL":
-                case "PLUS":
-                case "MULT":
-                    return true;
-            }
-            return false;
-        }
+            "OR" or "AND" or "EQUAL" or "NOTEQUAL" or "PLUS" or "MULT" => true,
+            _ => false,
+        };
 
         public static (bool wasChanged, IReadOnlyList<Instruction> instruction) CommonExprElimination(IReadOnlyList<Instruction> instructions)
         {
@@ -44,7 +35,7 @@ namespace SimpleLanguage
                 {
                     if (dict.ContainsKey(key))
                     {
-                        dict[key].Add(value);
+                        _ = dict[key].Add(value);
                     }
                     else
                     {
@@ -77,7 +68,7 @@ namespace SimpleLanguage
                 if (resultToExpr.TryGetValue(instruction.Result, out var oldExpr) &&
                     exprToResults.ContainsKey(oldExpr))
                 {
-                    exprToResults[oldExpr].Remove(instruction.Result);
+                    _ = exprToResults[oldExpr].Remove(instruction.Result);
                 }
 
                 resultToExpr[instruction.Result] = expr;
@@ -91,10 +82,10 @@ namespace SimpleLanguage
                         {
                             foreach (var res in exprToResults[delExpr])
                             {
-                                resultToExpr.Remove(res);
+                                _ = resultToExpr.Remove(res);
                             }
                         }
-                        exprToResults.Remove(delExpr);
+                        _ = exprToResults.Remove(delExpr);
                     }
                 }
             }

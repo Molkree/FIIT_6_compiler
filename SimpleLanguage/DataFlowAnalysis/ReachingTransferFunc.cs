@@ -34,7 +34,7 @@ namespace SimpleLanguage
             foreach (var block in blocks)
             {
                 var used = new HashSet<string>();
-                foreach (var instruction in block.GetInstructions().Reverse<Instruction>())
+                foreach (var instruction in block.GetInstructions().Reverse())
                 {
                     if (!used.Contains(instruction.Result) &&
                         (instruction.Operation == "assign" ||
@@ -42,7 +42,7 @@ namespace SimpleLanguage
                         instruction.Operation == "PLUS" && !instruction.Result.StartsWith("#", System.StringComparison.Ordinal)))
                     {
                         gen.Add(new DefinitionInfo { BasicBlock = block, Instruction = instruction });
-                        used.Add(instruction.Result);
+                        _ = used.Add(instruction.Result);
                     }
                     foreach (var killed_def in defs_groups[instruction.Result].Where(x => x != instruction))
                     {
