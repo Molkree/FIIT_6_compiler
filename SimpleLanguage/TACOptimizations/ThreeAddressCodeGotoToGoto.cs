@@ -5,7 +5,7 @@ namespace SimpleLanguage
 {
     public static class ThreeAddressCodeGotoToGoto
     {
-        private static bool wasChanged = false;
+        private static bool wasChanged;
 
         /// <summary>
         /// Устранит переходы к переходам
@@ -113,7 +113,7 @@ namespace SimpleLanguage
                 return instructions;
             }
 
-            var findItem = instructions.Where(x => instructions[findIndexIf].Label == x.Argument1 && x.Operation == "goto").Count() > 0 ?
+            var findItem = instructions.Where(x => instructions[findIndexIf].Label == x.Argument1 && x.Operation == "goto").Any() ?
                 instructions.Where(x => instructions[findIndexIf].Label == x.Argument1 && x.Operation == "goto").ElementAt(0) :
                 new Instruction("", "", "", "", "");
             var findIndexGoto = instructions.IndexOf(findItem);
