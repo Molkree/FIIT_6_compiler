@@ -73,21 +73,14 @@ namespace SimpleLanguage
 
     public class ConstantPropagation : GenericIterativeAlgorithm<Dictionary<string, LatticeValue>>
     {
-        public int FindOperations(int v1, int v2, string op)
+        public static int FindOperations(int v1, int v2, string op) => op switch
         {
-            switch (op)
-            {
-                case "PLUS":
-                    return v1 + v2;
-                case "MULT":
-                    return v1 * v2;
-                case "DIV":
-                    return v1 / v2;
-                case "MINUS":
-                    return v1 - v2;
-            }
-            return 0;
-        }
+            "PLUS" => v1 + v2,
+            "MULT" => v1 * v2,
+            "DIV" => v1 / v2,
+            "MINUS" => v1 - v2,
+            _ => 0,
+        };
 
         public HashSet<string> UntreatedTypes { get; set; } = new HashSet<string>()
         {
@@ -125,18 +118,18 @@ namespace SimpleLanguage
                     }
                     else if (int.TryParse(first, out var v2) && OUT[second].Type == LatticeTypeData.CONST)
                     {
-                        int.TryParse(OUT[second].ConstValue, out var val2);
+                        var val2 = int.Parse(OUT[second].ConstValue, CultureInfo.InvariantCulture);
                         OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val2, v2, operation).ToString(CultureInfo.InvariantCulture));
                     }
                     else if (OUT[first].Type == LatticeTypeData.CONST && int.TryParse(second, out var v1))
                     {
-                        int.TryParse(OUT[first].ConstValue, out var val1);
+                        var val1 = int.Parse(OUT[first].ConstValue, CultureInfo.InvariantCulture);
                         OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val1, v1, operation).ToString(CultureInfo.InvariantCulture));
                     }
                     else if (OUT[first].Type == LatticeTypeData.CONST && OUT[second].Type == LatticeTypeData.CONST)
                     {
-                        int.TryParse(OUT[first].ConstValue, out var val1);
-                        int.TryParse(OUT[second].ConstValue, out var val2);
+                        var val1 = int.Parse(OUT[first].ConstValue, CultureInfo.InvariantCulture);
+                        var val2 = int.Parse(OUT[second].ConstValue, CultureInfo.InvariantCulture);
                         OUT[instruction.Result] = new LatticeValue(LatticeTypeData.CONST, FindOperations(val1, val2, operation).ToString(CultureInfo.InvariantCulture));
                     }
                     else
@@ -164,7 +157,7 @@ namespace SimpleLanguage
                         OUT[instruction.Result] =
                             UntreatedTypes.Contains(operation)
                             ? new LatticeValue(LatticeTypeData.NAC)
-                            : first == "True" || first == "False"
+                            : first is "True" or "False"
                             ? new LatticeValue(LatticeTypeData.NAC)
                             : OUT[first].Type == LatticeTypeData.CONST
                             ? new LatticeValue(LatticeTypeData.CONST, OUT[first].ConstValue)
@@ -183,7 +176,7 @@ namespace SimpleLanguage
             var temp_keys = OUT.Keys.Where(x => x.StartsWith("#", StringComparison.Ordinal)).ToList();
             foreach (var k in temp_keys)
             {
-                OUT.Remove(k);
+                _ = OUT.Remove(k);
             }
 
             return OUT;
@@ -203,19 +196,19 @@ namespace SimpleLanguage
                 {
                     if (CheckStr(instr.Result) && !variables.Contains(instr.Result))
                     {
-                        variables.Add(instr.Result);
+                        _ = variables.Add(instr.Result);
                     }
 
                     if (CheckStr(instr.Argument1) && instr.Argument1 != "True"
                         && instr.Argument1 != "False" && !int.TryParse(instr.Argument1, out var temp1) && !variables.Contains(instr.Argument1))
                     {
-                        variables.Add(instr.Argument1);
+                        _ = variables.Add(instr.Argument1);
                     }
 
                     if (CheckStr(instr.Argument2) && instr.Argument2 != "True" && instr.Argument2 != "False"
                         && !int.TryParse(instr.Argument2, out var temp2) && !variables.Contains(instr.Argument2))
                     {
-                        variables.Add(instr.Argument2);
+                        _ = variables.Add(instr.Argument2);
                     }
                 }
             }
@@ -288,19 +281,19 @@ namespace SimpleLanguage
                 {
                     if (CheckStr(instr.Result) && !variables.Contains(instr.Result))
                     {
-                        variables.Add(instr.Result);
+                        _ = variables.Add(instr.Result);
                     }
 
                     if (CheckStr(instr.Argument1) && instr.Argument1 != "True"
                         && instr.Argument1 != "False" && !int.TryParse(instr.Argument1, out var temp1) && !variables.Contains(instr.Argument1))
                     {
-                        variables.Add(instr.Argument1);
+                        _ = variables.Add(instr.Argument1);
                     }
 
                     if (CheckStr(instr.Argument2) && instr.Argument2 != "True" && instr.Argument2 != "False"
                         && !int.TryParse(instr.Argument2, out var temp2) && !variables.Contains(instr.Argument2))
                     {
-                        variables.Add(instr.Argument2);
+                        _ = variables.Add(instr.Argument2);
                     }
                 }
             }
@@ -315,6 +308,6 @@ namespace SimpleLanguage
             return base.Execute(graph);
         }
 
-        private bool CheckStr(string str) => str != "" && !str.StartsWith("#", StringComparison.Ordinal) && !str.StartsWith("L", StringComparison.Ordinal);
+        private static bool CheckStr(string str) => str != "" && !str.StartsWith("#", StringComparison.Ordinal) && !str.StartsWith("L", StringComparison.Ordinal);
     }
 }
