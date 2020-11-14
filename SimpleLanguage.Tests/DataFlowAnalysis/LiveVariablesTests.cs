@@ -112,7 +112,7 @@ print(c + a + b);
             AssertSet(expected, actual);
         }
 
-        private List<(HashSet<string> IN, HashSet<string> OUT)> Execute(List<Instruction> TAC)
+        private static List<(HashSet<string> IN, HashSet<string> OUT)> Execute(List<Instruction> TAC)
         {
             var cfg = GenCFG(TAC);
 
@@ -125,7 +125,7 @@ print(c + a + b);
             return listAct.ToList();
         }
 
-        private void AssertSet(
+        private static void AssertSet(
             List<(HashSet<string> IN, HashSet<string> OUT)> expected,
             List<(HashSet<string> IN, HashSet<string> OUT)> actual)
         {

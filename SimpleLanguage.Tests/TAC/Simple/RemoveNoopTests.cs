@@ -9,15 +9,15 @@ namespace SimpleLanguage.Tests.TAC.Simple
     [TestFixture]
     internal class RemoveNoopTests : OptimizationsTestBase
     {
-        public (bool wasChanged, IReadOnlyCollection<Instruction> instructions) OptimizeLocal(IReadOnlyList<Instruction> tac) => ThreeAddressCodeRemoveNoop.RemoveEmptyNodes(tac);
+        public static (bool wasChanged, IReadOnlyCollection<Instruction> instructions) OptimizeLocal(IReadOnlyList<Instruction> tac) => ThreeAddressCodeRemoveNoop.RemoveEmptyNodes(tac);
 
-        public void AssertChanged((bool wasChanged, IReadOnlyCollection<Instruction> instructions) result, List<string> expected)
+        public static void AssertChanged((bool wasChanged, IReadOnlyCollection<Instruction> instructions) result, List<string> expected)
         {
             Assert.IsTrue(result.wasChanged);
             CollectionAssert.AreEqual(result.instructions.Select(x => x.ToString()), expected);
         }
 
-        public void AssertNotChanged((bool wasChanged, IReadOnlyCollection<Instruction> instructions) result, List<string> expected)
+        public static void AssertNotChanged((bool wasChanged, IReadOnlyCollection<Instruction> instructions) result, List<string> expected)
         {
             Assert.IsFalse(result.wasChanged);
             CollectionAssert.AreEqual(result.instructions.Select(x => x.ToString()), expected);

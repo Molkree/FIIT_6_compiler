@@ -8,7 +8,7 @@ namespace SimpleLanguage.Tests.AST
 {
     internal class ASTOPtimizerTests : ASTTestsBase
     {
-        private string[] ApplyOptimizations(Parser AST, IReadOnlyList<ChangeVisitor> Optimizations = null)
+        private static string[] ApplyOptimizations(Parser AST, IReadOnlyList<ChangeVisitor> Optimizations = null)
         {
             ASTOptimizer.Optimize(AST, Optimizations);
             var pp = new PrettyPrintVisitor();

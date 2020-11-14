@@ -11,7 +11,7 @@ namespace SimpleLanguage.Tests.LoopsInCFG
     [TestFixture]
     internal class DominatorTreeTests : OptimizationsTestBase
     {
-        private void TestInternal(ControlFlowGraph graph,
+        private static void TestInternal(ControlFlowGraph graph,
             DominatorDictionary expectedDoms,
             ParentsDictionary expectedParents,
             ChildrenDictionary expectedChildren)

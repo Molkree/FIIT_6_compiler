@@ -9,7 +9,7 @@ namespace SimpleLanguage.Tests.TAC.Combined
     [TestFixture]
     public class InteractionWithNoopRemovalTests : OptimizationsTestBase
     {
-        public void AssertEquality(IReadOnlyCollection<Instruction> result, List<string> expected)
+        public static void AssertEquality(IReadOnlyCollection<Instruction> result, List<string> expected)
         {
             var resultStr = result.Select(x => x.ToString());
             CollectionAssert.AreEqual(expected, resultStr);

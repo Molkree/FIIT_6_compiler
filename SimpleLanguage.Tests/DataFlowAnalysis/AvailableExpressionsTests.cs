@@ -7,7 +7,7 @@ namespace SimpleLanguage.Tests.DataFlowAnalysis
     [TestFixture]
     public class AvailableExpressionsTests : OptimizationsTestBase
     {
-        private List<(IEnumerable<OneExpression>, IEnumerable<OneExpression>)> GetActualInOutData(string program)
+        private static List<(IEnumerable<OneExpression>, IEnumerable<OneExpression>)> GetActualInOutData(string program)
         {
             var cfg = GenCFG(program);
             var resActiveVariable = new AvailableExpressions().Execute(cfg);
@@ -18,7 +18,7 @@ namespace SimpleLanguage.Tests.DataFlowAnalysis
             return actual;
         }
 
-        private void AssertSet(
+        private static void AssertSet(
             List<(IEnumerable<OneExpression> In, IEnumerable<OneExpression> Out)> expected,
             List<(IEnumerable<OneExpression> In, IEnumerable<OneExpression> Out)> actual)
         {
