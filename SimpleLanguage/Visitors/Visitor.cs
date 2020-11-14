@@ -17,7 +17,7 @@ namespace SimpleLanguage.Visitors
         public virtual void VisitPrintNode(PrintNode p) { }
         public virtual void VisitInputNode(InputNode i) { }
         public virtual void VisitExprListNode(ExprListNode e) { }
-        public virtual void VisitVarListNode(VarListNode v) { }
+        public virtual void VisitVarListNode(VarListNode varList) { }
         public virtual void VisitGotoNode(GotoNode g) { }
         public virtual void VisitLabelstatementNode(LabelStatementNode l) { }
         public virtual void VisitBlockNode(BlockNode bl) { }

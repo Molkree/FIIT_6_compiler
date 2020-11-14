@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptWhileFalseVisitor : ChangeVisitor
     {
-        public override void PostVisit(Node nd)
+        public override void PostVisit(Node node)
         {
-            if (!(nd is WhileNode n))
+            if (node is not WhileNode n)
             {
                 return;
             }

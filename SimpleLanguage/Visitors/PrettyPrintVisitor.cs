@@ -81,12 +81,12 @@ namespace SimpleLanguage.Visitors
             }
         }
 
-        public override void VisitVarListNode(VarListNode v)
+        public override void VisitVarListNode(VarListNode varList)
         {
-            Text += IndentStr() + "var " + v.Vars[0].Name;
-            for (var i = 1; i < v.Vars.Count; i++)
+            Text += IndentStr() + "var " + varList.Vars[0].Name;
+            for (var i = 1; i < varList.Vars.Count; i++)
             {
-                Text += ", " + v.Vars[i].Name;
+                Text += ", " + varList.Vars[i].Name;
             }
             Text += ";";
         }

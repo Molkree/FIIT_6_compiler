@@ -26,7 +26,7 @@ namespace SimpleLanguage.Visitors
             GenCommand("", "assign", argument1, "", a.Id.Name);
         }
 
-        private string GenEndLabel(IfElseNode i)
+        private static string GenEndLabel(IfElseNode i)
         {
             Node parent, curNode;
             if (i.Parent is LabelStatementNode)
@@ -47,7 +47,7 @@ namespace SimpleLanguage.Visitors
                 ThreeAddressCodeTmp.GenTmpLabel();
         }
 
-        private bool InvertIfExpression(IfElseNode i)
+        private static bool InvertIfExpression(IfElseNode i)
         {
             if (i.Expr is BoolValNode boolValNode)
             {
@@ -155,7 +155,7 @@ namespace SimpleLanguage.Visitors
             }
         }
 
-        public override void VisitEmptyNode(EmptyNode w) => GenCommand("", "noop", "", "", "");
+        public override void VisitEmptyNode(EmptyNode e) => GenCommand("", "noop", "", "", "");
 
         public override void VisitGotoNode(GotoNode g) => GenCommand("", "goto", g.Label.Num.ToString(CultureInfo.InvariantCulture), "", "");
 
@@ -180,7 +180,7 @@ namespace SimpleLanguage.Visitors
                 GenCommand("", "noop", "", "", "");
             }
 
-            Instructions[Instructions.Count - 1].Label = whileHeadLabel;
+            Instructions[^1].Label = whileHeadLabel;
 
             GenCommand("", "ifgoto", exprTmpName, whileBodyLabel, "");
             GenCommand("", "goto", exitLabel, "", "");

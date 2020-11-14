@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprSumZero : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is BinOpNode binOpNode && binOpNode.Op == OpType.PLUS)
+            if (node is BinOpNode binOpNode && binOpNode.Op == OpType.PLUS)
             {
                 if (binOpNode.Left is IntNumNode intNodeLeft && intNodeLeft.Num == 0)
                 {

@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprMultDivByOne : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is BinOpNode binOpNode && (binOpNode.Op == OpType.MULT || binOpNode.Op == OpType.DIV))
+            if (node is BinOpNode binOpNode && (binOpNode.Op == OpType.MULT || binOpNode.Op == OpType.DIV))
             {
                 if (binOpNode.Left is IntNumNode intNumNodeLeft && intNumNodeLeft.Num == 1 &&
                     binOpNode.Op != OpType.DIV) // Do not replace "1 / a"

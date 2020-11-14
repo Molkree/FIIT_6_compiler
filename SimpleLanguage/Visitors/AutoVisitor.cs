@@ -4,8 +4,8 @@ namespace SimpleLanguage.Visitors
 {
     public class AutoVisitor : Visitor
     {
-        public virtual void PreVisit(Node n) { }
-        public virtual void PostVisit(Node n) { }
+        public virtual void PreVisit(Node node) { }
+        public virtual void PostVisit(Node node) { }
 
         public override void VisitBinOpNode(BinOpNode binop)
         {
@@ -40,21 +40,21 @@ namespace SimpleLanguage.Visitors
             PostVisit(bl);
         }
 
-        public override void VisitVarListNode(VarListNode w)
+        public override void VisitVarListNode(VarListNode varList)
         {
-            PreVisit(w);
-            foreach (var v in w.Vars)
+            PreVisit(varList);
+            foreach (var v in varList.Vars)
             {
                 v.Visit(this);
             }
-            PostVisit(w);
+            PostVisit(varList);
         }
 
-        public override void VisitBlockNode(BlockNode b)
+        public override void VisitBlockNode(BlockNode bl)
         {
-            PreVisit(b);
-            b.List.Visit(this);
-            PostVisit(b);
+            PreVisit(bl);
+            bl.List.Visit(this);
+            PostVisit(bl);
         }
 
         public override void VisitExprListNode(ExprListNode e)

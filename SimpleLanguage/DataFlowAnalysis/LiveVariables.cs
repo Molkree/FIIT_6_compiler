@@ -19,18 +19,18 @@ namespace SimpleLanguage
         public override string ToString()
         {
             var str = new StringBuilder();
-            str.Append("{");
+            _ = str.Append('{');
             foreach (var i in IN)
             {
-                str.Append($" {i}");
+                _ = str.Append($" {i}");
             }
-            str.Append(" } ");
-            str.Append("{");
+            _ = str.Append(" } ");
+            _ = str.Append('{');
             foreach (var i in OUT)
             {
-                str.Append($" {i}");
+                _ = str.Append($" {i}");
             }
-            str.Append(" } ");
+            _ = str.Append(" } ");
 
             return str.ToString();
         }
@@ -104,10 +104,10 @@ namespace SimpleLanguage
             }
         }
 
-        public override InOutData<HashSet<string>> Execute(ControlFlowGraph cfg, bool useRenumbering = true)
+        public override InOutData<HashSet<string>> Execute(ControlFlowGraph graph, bool useRenumbering = true)
         {
-            TransferFunction = new LiveVariablesTransferFunc(cfg).Transfer;
-            return base.Execute(cfg);
+            TransferFunction = new LiveVariablesTransferFunc(graph).Transfer;
+            return base.Execute(graph);
         }
 
         public LiveVariables() => DictInOut = new Dictionary<int, InOutSet>();
@@ -119,25 +119,25 @@ namespace SimpleLanguage
             foreach (var x in cfg.GetCurrentBasicBlocks())
             {
                 var n = cfg.VertexOf(x);
-                str.Append($"Block № {n} \n\n");
+                _ = str.Append($"Block № {n} \n\n");
                 foreach (var b in x.GetInstructions())
                 {
-                    str.Append(b.ToString() + "\n");
+                    _ = str.Append(b.ToString() + "\n");
                 }
-                str.Append($"\n\n---IN set---\n");
-                str.Append("{");
+                _ = str.Append($"\n\n---IN set---\n");
+                _ = str.Append('{');
                 foreach (var i in DictInOut[n].IN)
                 {
-                    str.Append($" {i}");
+                    _ = str.Append($" {i}");
                 }
-                str.Append(" }");
-                str.Append($"\n\n---OUT set---\n");
-                str.Append("{");
+                _ = str.Append(" }");
+                _ = str.Append($"\n\n---OUT set---\n");
+                _ = str.Append('{');
                 foreach (var i in DictInOut[n].OUT)
                 {
-                    str.Append($" {i}");
+                    _ = str.Append($" {i}");
                 }
-                str.Append(" }\n\n");
+                _ = str.Append(" }\n\n");
             }
             return str.ToString();
         }
@@ -147,7 +147,7 @@ namespace SimpleLanguage
     {
         private readonly Dictionary<BasicBlock, DefUseSet> dictDefUse;
 
-        private (HashSet<string> def, HashSet<string> use) FillDefUse(IReadOnlyCollection<Instruction> block)
+        private static (HashSet<string> def, HashSet<string> use) FillDefUse(IReadOnlyCollection<Instruction> block)
         {
             Func<string, bool> IsId = ThreeAddressCodeDefUse.IsId;
 
@@ -157,15 +157,15 @@ namespace SimpleLanguage
             {
                 if (IsId(instruction.Argument1) && !def.Contains(instruction.Argument1))
                 {
-                    use.Add(instruction.Argument1);
+                    _ = use.Add(instruction.Argument1);
                 }
                 if (IsId(instruction.Argument2) && !def.Contains(instruction.Argument2))
                 {
-                    use.Add(instruction.Argument2);
+                    _ = use.Add(instruction.Argument2);
                 }
                 if (IsId(instruction.Result) && !use.Contains(instruction.Result))
                 {
-                    def.Add(instruction.Result);
+                    _ = def.Add(instruction.Result);
                 }
             }
 

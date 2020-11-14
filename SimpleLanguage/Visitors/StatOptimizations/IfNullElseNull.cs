@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class IfNullElseNull : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is IfElseNode ifn &&
+            if (node is IfElseNode ifn &&
                 (ifn.FalseStat is EmptyNode || ifn.FalseStat == null) &&
                 (ifn.TrueStat is EmptyNode || ifn.TrueStat == null))
             {
