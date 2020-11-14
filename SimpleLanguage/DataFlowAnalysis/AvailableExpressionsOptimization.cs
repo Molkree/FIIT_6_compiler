@@ -14,138 +14,124 @@ namespace SimpleLanguage.DataFlowAnalysis
         /// <param name="controlFlowGraph">Граф потока управления</param>
         /// <param name="inOutData">In Out - данные о доступных выражениях</param>
         public static void Execute(ControlFlowGraph controlFlowGraph, InOutData<List<OneExpression>> inOutData)
-            => new AvailableExpressionRun(controlFlowGraph, inOutData);
-
-        private class AvailableExpressionRun
         {
-            private readonly ControlFlowGraph graph;
+            if (!controlFlowGraph.IsReducibleGraph())
+            {
+                return;
+            }
+            GraphTraversing(controlFlowGraph, inOutData);
+        }
 
-            private readonly InOutData<List<OneExpression>> inOutData;
-
-            private int targetInstructionIndex; // для алгоритма
-
-            private BasicBlock targetBlock;     // для алгоритма
-
-            private readonly List<(BasicBlock block, int numberInstruction, Instruction instruction)> listOfPointsInBlock
+        private static int targetInstructionIndex; // для алгоритма
+        private static BasicBlock targetBlock;     // для алгоритма
+        private static readonly List<(BasicBlock block, int numberInstruction, Instruction instruction)> listOfPointsInBlock
                 = new List<(BasicBlock, int, Instruction)>();
 
-            public AvailableExpressionRun(ControlFlowGraph cfg, InOutData<List<OneExpression>> inOutData)
+        private static void GraphTraversing(ControlFlowGraph controlFlowGraph, InOutData<List<OneExpression>> inOutData)
+        {
+            foreach (var block in controlFlowGraph.GetCurrentBasicBlocks())
             {
-                graph = cfg;
-                this.inOutData = inOutData;
-                if (!graph.IsReducibleGraph())
+                var instructions = block.GetInstructions();
+                foreach (var expression in inOutData[block].In)
                 {
-                    return;
-                }
-                GraphTraversing();
-            }
-
-            private void GraphTraversing()
-            {
-                foreach (var block in graph.GetCurrentBasicBlocks())
-                {
-                    var instructions = block.GetInstructions();
-                    foreach (var expression in inOutData[block].In)
+                    if (ContainsExpressionInInstructions(instructions.ToList(), expression))
                     {
-                        if (ContainsExpressionInInstructions(instructions.ToList(), expression))
+                        targetBlock = block;
+                        if (OpenBlock(controlFlowGraph, block, expression))
                         {
-                            targetBlock = block;
-                            if (OpenBlock(block, expression))
-                            {
-                                ChangeInstructionsInGraph();
-                            }
+                            ChangeInstructionsInGraph();
                         }
-                        listOfPointsInBlock.Clear();
                     }
+                    listOfPointsInBlock.Clear();
                 }
             }
+        }
 
-            private bool OpenBlock(BasicBlock block, OneExpression expression)
+        private static bool OpenBlock(ControlFlowGraph controlFlowGraph, BasicBlock block, OneExpression expression)
+        {
+            var stack = new Stack<(BasicBlock block, List<BasicBlock> way)>();
+            foreach (var bblock in controlFlowGraph.GetParentsBasicBlocks(controlFlowGraph.VertexOf(block)))
             {
-                var stack = new Stack<(BasicBlock block, List<BasicBlock> way)>();
-                foreach (var bblock in graph.GetParentsBasicBlocks(graph.VertexOf(block)))
+                var way = new List<BasicBlock>() { bblock.block };
+                stack.Push((bblock.block, way));
+            }
+            while (stack.Count != 0)
+            {
+                var element = stack.Pop();
+                if (!IsContainedInListOfInstr(element.block.GetInstructions(), expression, element.block))
                 {
-                    var way = new List<BasicBlock>() { bblock.block };
-                    stack.Push((bblock.block, way));
-                }
-                while (stack.Count != 0)
-                {
-                    var element = stack.Pop();
-                    if (!IsContainedInListOfInstr(element.block.GetInstructions(), expression, element.block))
+                    foreach (var parent in controlFlowGraph.GetParentsBasicBlocks(controlFlowGraph.VertexOf(element.block)))
                     {
-                        foreach (var parent in graph.GetParentsBasicBlocks(graph.VertexOf(element.block)))
+                        if (parent.block == targetBlock)
                         {
-                            if (parent.block == targetBlock)
-                            {
-                                return false;
-                            }
-                            if (!element.way.Contains(parent.block))
-                            {
-                                stack.Push((parent.block, new List<BasicBlock>(element.way) { parent.block }));
-                            }
+                            return false;
+                        }
+                        if (!element.way.Contains(parent.block))
+                        {
+                            stack.Push((parent.block, new List<BasicBlock>(element.way) { parent.block }));
                         }
                     }
                 }
-                return true;
             }
+            return true;
+        }
 
-            private void ChangeInstructionsInGraph()
+        private static void ChangeInstructionsInGraph()
+        {
+            var tmpVariable = ThreeAddressCodeTmp.GenTmpName();
+            foreach (var (block, numberInstruction, instruction) in listOfPointsInBlock)
             {
-                var tmpVariable = ThreeAddressCodeTmp.GenTmpName();
-                foreach (var (block, numberInstruction, instruction) in listOfPointsInBlock)
+                block.RemoveInstructionByIndex(numberInstruction);
+                block.InsertInstruction(numberInstruction,
+                    new Instruction("", "assign", tmpVariable, "", instruction.Result));
+                block.InsertInstruction(numberInstruction,
+                    new Instruction(instruction.Label, instruction.Operation, instruction.Argument1,
+                    instruction.Argument2, tmpVariable));
+            }
+            var targetTemp = targetBlock.GetInstructions()[targetInstructionIndex];
+            targetBlock.RemoveInstructionByIndex(targetInstructionIndex);
+            targetBlock.InsertInstruction(targetInstructionIndex,
+                new Instruction(targetTemp.Label, "assign", tmpVariable, "", targetTemp.Result));
+        }
+
+        private static bool InstructionContainsExpression(Instruction instruction, OneExpression expression)
+           =>
+            instruction.Operation == expression.Operation && (instruction.Operation == "MINUS" || instruction.Operation == "DIV")
+            && instruction.Argument1 == expression.Argument1 && instruction.Argument2 == expression.Argument2
+            ||
+            instruction.Operation == expression.Operation && (instruction.Operation != "MINUS" || instruction.Operation != "DIV")
+            && (instruction.Argument1 == expression.Argument1 && instruction.Argument2 == expression.Argument2
+            || instruction.Argument1 == expression.Argument2 && instruction.Argument2 == expression.Argument1);
+
+        private static bool ContainsExpressionInInstructions(List<Instruction> instructions, OneExpression expression)
+        {
+            for (var i = 0; i < instructions.Count; i++)
+            {
+                if (InstructionContainsExpression(instructions[i], expression))
                 {
-                    block.RemoveInstructionByIndex(numberInstruction);
-                    block.InsertInstruction(numberInstruction,
-                        new Instruction("", "assign", tmpVariable, "", instruction.Result));
-                    block.InsertInstruction(numberInstruction,
-                        new Instruction(instruction.Label, instruction.Operation, instruction.Argument1,
-                        instruction.Argument2, tmpVariable));
+                    targetInstructionIndex = i;
+                    return true;
                 }
-                var targetTemp = targetBlock.GetInstructions()[targetInstructionIndex];
-                targetBlock.RemoveInstructionByIndex(targetInstructionIndex);
-                targetBlock.InsertInstruction(targetInstructionIndex,
-                    new Instruction(targetTemp.Label, "assign", tmpVariable, "", targetTemp.Result));
             }
+            return false;
+        }
 
-            private bool InstructionContainsExpression(Instruction instruction, OneExpression expression)
-               =>
-                instruction.Operation == expression.Operation && (instruction.Operation == "MINUS" || instruction.Operation == "DIV")
-                && instruction.Argument1 == expression.Argument1 && instruction.Argument2 == expression.Argument2
-                ||
-                instruction.Operation == expression.Operation && (instruction.Operation != "MINUS" || instruction.Operation != "DIV")
-                && (instruction.Argument1 == expression.Argument1 && instruction.Argument2 == expression.Argument2
-                || instruction.Argument1 == expression.Argument2 && instruction.Argument2 == expression.Argument1);
-
-            private bool ContainsExpressionInInstructions(List<Instruction> instructions, OneExpression expression)
+        private static bool IsContainedInListOfInstr(IReadOnlyList<Instruction> instructions,
+            OneExpression expression,
+            BasicBlock block)
+        {
+            for (var i = instructions.Count - 1; i >= 0; i--)
             {
-                for (var i = 0; i < instructions.Count; i++)
+                if (InstructionContainsExpression(instructions[i], expression))
                 {
-                    if (InstructionContainsExpression(instructions[i], expression))
+                    if (!listOfPointsInBlock.Select(element => element.block).Contains(block))
                     {
-                        targetInstructionIndex = i;
-                        return true;
+                        listOfPointsInBlock.Add((block, i, instructions[i]));
                     }
+                    return true;
                 }
-                return false;
             }
-
-            private bool IsContainedInListOfInstr(IReadOnlyList<Instruction> instructions,
-                OneExpression expression,
-                BasicBlock block)
-            {
-                for (var i = instructions.Count - 1; i >= 0; i--)
-                {
-                    if (InstructionContainsExpression(instructions[i], expression))
-                    {
-                        if (!listOfPointsInBlock.Select(element => element.block).Contains(block))
-                        {
-                            listOfPointsInBlock.Add((block, i, instructions[i]));
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
+            return false;
         }
     }
 }

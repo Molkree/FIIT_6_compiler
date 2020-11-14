@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.LoopsInCFG
 {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {
@@ -174,7 +173,7 @@ e = zz + i;
             AssertSet(expected, actual);
         }
 
-        private void AssertSet<T>(
+        private static void AssertSet<T>(
             List<(IEnumerable<T> IN, IEnumerable<T> OUT)> expected,
             List<(IEnumerable<T> IN, IEnumerable<T> OUT)> actual)
         {

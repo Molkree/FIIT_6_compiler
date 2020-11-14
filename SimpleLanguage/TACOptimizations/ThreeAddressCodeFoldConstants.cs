@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace SimpleLanguage
 {
@@ -34,50 +35,28 @@ namespace SimpleLanguage
             return (wasChanged, result);
         }
 
-        private static string CalculateConstant(string operation, bool boolArg1, bool boolArg2)
+        private static string CalculateConstant(string operation, bool boolArg1, bool boolArg2) => operation switch
         {
-            switch (operation)
-            {
-                case "OR":
-                    return (boolArg1 || boolArg2).ToString();
-                case "AND":
-                    return (boolArg1 && boolArg2).ToString();
-                case "EQUAL":
-                    return (boolArg1 == boolArg2).ToString();
-                case "NOTEQUAL":
-                    return (boolArg1 != boolArg2).ToString();
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+            "OR" => (boolArg1 || boolArg2).ToString(),
+            "AND" => (boolArg1 && boolArg2).ToString(),
+            "EQUAL" => (boolArg1 == boolArg2).ToString(),
+            "NOTEQUAL" => (boolArg1 != boolArg2).ToString(),
+            _ => throw new InvalidOperationException(),
+        };
 
-        private static string CalculateConstant(string operation, int intArg1, int intArg2)
+        private static string CalculateConstant(string operation, int intArg1, int intArg2) => operation switch
         {
-            switch (operation)
-            {
-                case "EQUAL":
-                    return (intArg1 == intArg2).ToString();
-                case "NOTEQUAL":
-                    return (intArg1 != intArg2).ToString();
-                case "LESS":
-                    return (intArg1 < intArg2).ToString();
-                case "GREATER":
-                    return (intArg1 > intArg2).ToString();
-                case "EQGREATER":
-                    return (intArg1 >= intArg2).ToString();
-                case "EQLESS":
-                    return (intArg1 <= intArg2).ToString();
-                case "PLUS":
-                    return (intArg1 + intArg2).ToString();
-                case "MINUS":
-                    return (intArg1 - intArg2).ToString();
-                case "MULT":
-                    return (intArg1 * intArg2).ToString();
-                case "DIV":
-                    return (intArg1 / intArg2).ToString();
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+            "EQUAL" => (intArg1 == intArg2).ToString(),
+            "NOTEQUAL" => (intArg1 != intArg2).ToString(),
+            "LESS" => (intArg1 < intArg2).ToString(),
+            "GREATER" => (intArg1 > intArg2).ToString(),
+            "EQGREATER" => (intArg1 >= intArg2).ToString(),
+            "EQLESS" => (intArg1 <= intArg2).ToString(),
+            "PLUS" => (intArg1 + intArg2).ToString(CultureInfo.InvariantCulture),
+            "MINUS" => (intArg1 - intArg2).ToString(CultureInfo.InvariantCulture),
+            "MULT" => (intArg1 * intArg2).ToString(CultureInfo.InvariantCulture),
+            "DIV" => (intArg1 / intArg2).ToString(CultureInfo.InvariantCulture),
+            _ => throw new InvalidOperationException(),
+        };
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {
@@ -9,7 +8,7 @@ namespace SimpleLanguage.Tests.DataFlowAnalysis
     [TestFixture]
     internal class ReachingDefinitionsTests : OptimizationsTestBase
     {
-        private (List<BasicBlock> basicBlocks, InOutInfo inOutInfo) GenGraphAndGetInOutInfo(string program)
+        private static (List<BasicBlock> basicBlocks, InOutInfo inOutInfo) GenGraphAndGetInOutInfo(string program)
         {
             var blocks = GenBlocks(program);
             var cfg = new ControlFlowGraph(blocks);
@@ -98,7 +97,7 @@ c = b;
 
             var expected = blocks[0].GetInstructions()
                 .Skip(2).Take(2)
-                .Append(blocks[0].GetInstructions().Last());
+                .Append(blocks[0].GetInstructions()[blocks[0].GetInstructions().Count - 1]);
             CollectionAssert.AreEquivalent(expected, inOutInfo[blocks[0]].Out);
         }
 

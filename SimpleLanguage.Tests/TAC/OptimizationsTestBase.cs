@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SimpleLanguage;
 using SimpleLanguage.Visitors;
 using SimpleParser;
 using SimpleScanner;
@@ -11,7 +10,7 @@ namespace SimpleLanguage.Tests
     using Optimization = Func<IReadOnlyList<Instruction>, (bool wasChanged, IReadOnlyList<Instruction> instructions)>;
     public class OptimizationsTestBase
     {
-        protected List<Instruction> GenTAC(string sourceCode)
+        protected static List<Instruction> GenTAC(string sourceCode)
         {
             ThreeAddressCodeTmp.ResetTmpName();
             ThreeAddressCodeTmp.ResetTmpLabel();
@@ -19,7 +18,7 @@ namespace SimpleLanguage.Tests
             var scanner = new Scanner();
             scanner.SetSource(sourceCode, 0);
             var parser = new Parser(scanner);
-            parser.Parse();
+            _ = parser.Parse();
             var fillParents = new FillParentsVisitor();
             parser.root.Visit(fillParents);
             var threeAddrCodeVisitor = new ThreeAddrGenVisitor();
@@ -27,10 +26,10 @@ namespace SimpleLanguage.Tests
             return threeAddrCodeVisitor.Instructions;
         }
 
-        protected List<BasicBlock> GenBlocks(string program)
+        protected static List<BasicBlock> GenBlocks(string program)
             => BasicBlockLeader.DivideLeaderToLeader(GenTAC(program));
 
-        protected ControlFlowGraph BuildTACOptimizeCFG(string program)
+        protected static ControlFlowGraph BuildTACOptimizeCFG(string program)
         {
             var TAC = GenTAC(program);
             var optResult = ThreeAddressCodeOptimizer.OptimizeAll(TAC);
@@ -38,13 +37,13 @@ namespace SimpleLanguage.Tests
             return new ControlFlowGraph(blocks);
         }
 
-        protected ControlFlowGraph GenCFG(string program)
+        protected static ControlFlowGraph GenCFG(string program)
             => new ControlFlowGraph(GenBlocks(program));
 
-        protected ControlFlowGraph GenCFG(List<Instruction> TAC)
+        protected static ControlFlowGraph GenCFG(List<Instruction> TAC)
             => new ControlFlowGraph(BasicBlockLeader.DivideLeaderToLeader(TAC));
 
-        protected IEnumerable<string> TestTACOptimization(
+        protected static IEnumerable<string> TestTACOptimization(
             string sourceCode,
             Optimization basicBlockOptimization = null,
             Optimization allCodeOptimization = null,

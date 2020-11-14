@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.LoopsInCFG
 {
@@ -12,7 +11,7 @@ namespace SimpleLanguage.Tests.LoopsInCFG
     [TestFixture]
     internal class DominatorTreeTests : OptimizationsTestBase
     {
-        private void TestInternal(ControlFlowGraph graph,
+        private static void TestInternal(ControlFlowGraph graph,
             DominatorDictionary expectedDoms,
             ParentsDictionary expectedParents,
             ChildrenDictionary expectedChildren)
@@ -22,14 +21,14 @@ namespace SimpleLanguage.Tests.LoopsInCFG
             var tree = dt.Execute(graph);
             var blocks = graph.GetCurrentBasicBlocks();
 
-            Assert.AreEqual(blocks.Count, dominators.Count(), "Dominators count and blocks count are different");
+            Assert.AreEqual(blocks.Count, dominators.Count, "Dominators count and blocks count are different");
 
-            for (var i = 0; i < blocks.Count(); ++i)
+            for (var i = 0; i < blocks.Count; ++i)
             {
                 CollectionAssert.AreEquivalent(expectedDoms[i], dominators[blocks[i]], $"Check dominators: error for block #{i}");
             }
 
-            for (var i = 0; i < blocks.Count(); ++i)
+            for (var i = 0; i < blocks.Count; ++i)
             {
                 Assert.AreEqual(expectedParents[i], tree.Parent(blocks[i]), $"Check parents: error for block #{i}");
                 CollectionAssert.AreEquivalent(expectedChildren[i], tree.Children(blocks[i]), $"Check children: error for block #{i}");

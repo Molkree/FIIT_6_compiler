@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {
@@ -113,20 +112,20 @@ print(c + a + b);
             AssertSet(expected, actual);
         }
 
-        private List<(HashSet<string> IN, HashSet<string> OUT)> Execute(List<Instruction> TAC)
+        private static List<(HashSet<string> IN, HashSet<string> OUT)> Execute(List<Instruction> TAC)
         {
             var cfg = GenCFG(TAC);
 
             var liveAct = new LiveVariables();
             liveAct.ExecuteInternal(cfg);
 
-            var listAct = liveAct.dictInOut
+            var listAct = liveAct.DictInOut
                 .Select(x => x.Value)
                 .Select(y => (y.IN as HashSet<string>, y.OUT as HashSet<string>));
             return listAct.ToList();
         }
 
-        private void AssertSet(
+        private static void AssertSet(
             List<(HashSet<string> IN, HashSet<string> OUT)> expected,
             List<(HashSet<string> IN, HashSet<string> OUT)> actual)
         {

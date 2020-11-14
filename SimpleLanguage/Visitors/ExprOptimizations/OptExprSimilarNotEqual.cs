@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprSimilarNotEqual : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is BinOpNode binOpNode &&
+            if (node is BinOpNode binOpNode &&
                 (binOpNode.Op == OpType.GREATER || binOpNode.Op == OpType.LESS || binOpNode.Op == OpType.NOTEQUAL)
                 &&
                 // Для цифр и значений bool:

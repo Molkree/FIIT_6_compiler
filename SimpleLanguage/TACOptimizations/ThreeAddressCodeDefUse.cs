@@ -5,7 +5,7 @@ namespace SimpleLanguage
     // Накапливание Def-Use информации и удаление определений с Uses.Count == 0
     public static class ThreeAddressCodeDefUse
     {
-        public static List<Def> DefList;
+        public static List<Def> DefList { get; set; }
 
         internal static bool IsId(string id) =>
             id != null && id != "" && id != "True" && id != "False" &&
@@ -13,9 +13,9 @@ namespace SimpleLanguage
 
         private static void AddUse(string id, Instruction c, int num)
         {
-            if (id != null && id.StartsWith("!")) // for this case: if !#t1 goto L
+            if (id != null && id.StartsWith("!", System.StringComparison.Ordinal)) // for this case: if !#t1 goto L
             {
-                id = id.Substring(1);
+                id = id[1..];
             }
             if (IsId(id))
             {
@@ -50,7 +50,7 @@ namespace SimpleLanguage
 
         private static void DeleteUse(string id, int i)
         {
-            if (id == "" || id == null)
+            if (id is "" or null)
             {
                 return;
             }

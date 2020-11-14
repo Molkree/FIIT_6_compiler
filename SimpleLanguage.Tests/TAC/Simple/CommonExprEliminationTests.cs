@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.TAC.Simple
 {

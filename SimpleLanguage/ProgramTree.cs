@@ -256,11 +256,11 @@ namespace ProgramTree
 
     public class VarListNode : StatementNode
     {
-        public List<IdNode> vars = new List<IdNode>();
-
         public VarListNode(IdNode id) => Add(id);
 
-        public void Add(IdNode id) => vars.Add(id);
+        public List<IdNode> Vars { get; set; } = new List<IdNode>();
+
+        public void Add(IdNode id) => Vars.Add(id);
 
         public override void Visit(Visitor v) => v.VisitVarListNode(this);
     }

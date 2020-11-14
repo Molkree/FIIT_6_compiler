@@ -18,17 +18,17 @@ namespace SimpleIDE
                 // AST
                 textAST.Text = "";
                 var indicesForAST = new List<int>();
-                foreach (var x in ASToptList.CheckedIndices)
+                foreach (int x in ASToptList.CheckedIndices)
                 {
-                    indicesForAST.Add(int.Parse(x.ToString()));
+                    indicesForAST.Add(x);
                 }
                 textAST.Text = Controller.GetASTWithOpt(parser, indicesForAST);
 
                 // TAC
                 var indicesForTAC = new List<int>();
-                foreach (var x in TACoptLocalList.CheckedIndices)
+                foreach (int x in TACoptLocalList.CheckedIndices)
                 {
-                    indicesForTAC.Add(int.Parse(x.ToString()));
+                    indicesForTAC.Add(x);
                 }
                 var (str, instructions) = Controller.GetTACWithOpt(parser, indicesForTAC);
                 textTAC.Text = str;

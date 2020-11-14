@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {
@@ -356,7 +355,7 @@ if c > 5
             var constProp = new ConstantPropagation();
             var result = constProp.Execute(cfg);
             var blocks = cfg.GetCurrentBasicBlocks();
-            var (_, Out) = result[blocks.Last()];
+            var (_, Out) = result[blocks[blocks.Count - 1]];
 
             Assert.AreEqual(LatticeTypeData.NAC, Out["c"].Type);
             Assert.AreEqual(LatticeTypeData.CONST, Out["x"].Type);

@@ -4,10 +4,10 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprAlgebraic : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
             // Algebraic expressions of the form: 2 * 3 => 6
-            if (n is BinOpNode binop && binop.Left is IntNumNode intNumLeft && binop.Right is IntNumNode intNumRight)
+            if (node is BinOpNode binop && binop.Left is IntNumNode intNumLeft && binop.Right is IntNumNode intNumRight)
             {
                 var result = new IntNumNode(0);
                 switch (binop.Op)

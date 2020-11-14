@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SimpleLanguage
 {
     public class Region
     {
-        public IReadOnlyCollection<Region> IncludedRegions;
-        public IReadOnlyCollection<(Region, Region)> Edges;
-        public BasicBlock Initial;
+        public IReadOnlyCollection<Region> IncludedRegions { get; set; }
+        public IReadOnlyCollection<(Region, Region)> Edges { get; set; }
+        public BasicBlock Initial { get; set; }
 
         public Region(IReadOnlyCollection<Region> regions = null, IReadOnlyCollection<(Region, Region)> edges = null, BasicBlock initial = null)
         {
@@ -46,7 +47,7 @@ namespace SimpleLanguage
         private readonly List<List<BasicBlock>> cycles;
         private readonly HashSet<BasicBlock> blocks;
         private readonly Dictionary<BasicBlock, List<BasicBlock>> children = new Dictionary<BasicBlock, List<BasicBlock>>();
-        private uint curID = 0;
+        private uint curID;
 
         public CFGRegions(ControlFlowGraph cfg)
         {
@@ -58,7 +59,7 @@ namespace SimpleLanguage
                 var index = cfg.VertexOf(elem);
                 if (i++ != index)
                 {
-                    throw new Exception();
+                    throw new ArgumentException("Graph is not ordered");
                 }
 
                 children.Add(elem, cfg.GetChildrenBasicBlocks(index).Select(x => x.block).ToList());
@@ -92,7 +93,7 @@ namespace SimpleLanguage
         private void CollapseCycle(IReadOnlyCollection<BasicBlock> cycle)
         {
             var bodyBlock = new BasicBlock();
-            bodyBlock.AddInstruction(new Instruction("", "", curID.ToString(), "", ""));
+            bodyBlock.AddInstruction(new Instruction("", "", curID.ToString(CultureInfo.InvariantCulture), "", ""));
             children.Add(bodyBlock, new List<BasicBlock>());
             var cycleEdges = new List<(BasicBlock, BasicBlock)>();
 
@@ -105,7 +106,7 @@ namespace SimpleLanguage
                     {
                         if (child == cycle.First())
                         {
-                            children[curVertex].Remove(child);
+                            _ = children[curVertex].Remove(child);
                             children[curVertex].Add(bodyBlock);
                         }
                     }
@@ -118,26 +119,26 @@ namespace SimpleLanguage
                         if (child == cycle.First())
                         {
                             children[bodyBlock].Add(bodyBlock);
-                            children[curVertex].Remove(child);
+                            _ = children[curVertex].Remove(child);
                         }
                         else if (!cycle.Contains(child))
                         {
                             children[bodyBlock].Add(child);
-                            children[curVertex].Remove(child);
+                            _ = children[curVertex].Remove(child);
                         }
                         else
                         {
                             cycleEdges.Add((curVertex, child));
-                            children[curVertex].Remove(child);
+                            _ = children[curVertex].Remove(child);
                         }
                     }
                 }
             }
-            blocks.Add(bodyBlock);
+            _ = blocks.Add(bodyBlock);
             foreach (var bblock in cycle)
             {
-                blocks.Remove(bblock);
-                children.Remove(bblock);
+                _ = blocks.Remove(bblock);
+                _ = children.Remove(bblock);
             }
             var innerRegions = cycle.Select(x => regions[BlockToRegion[x]]).ToList();
             var innerEdged = cycleEdges.Select(x => (regions[BlockToRegion[x.Item1]], regions[BlockToRegion[x.Item2]])).ToList();
@@ -148,12 +149,12 @@ namespace SimpleLanguage
 
             // add new node
             var cycleBlock = new BasicBlock();
-            cycleBlock.AddInstruction(new Instruction("", "", curID.ToString(), "", ""));
-            blocks.Add(cycleBlock);
+            cycleBlock.AddInstruction(new Instruction("", "", curID.ToString(CultureInfo.InvariantCulture), "", ""));
+            _ = blocks.Add(cycleBlock);
             children.Add(cycleBlock, new List<BasicBlock>());
 
             // clear old node
-            children[bodyBlock].Remove(bodyBlock);
+            _ = children[bodyBlock].Remove(bodyBlock);
             foreach (var child in children[bodyBlock])
             {
                 children[cycleBlock].Add(child);
@@ -170,8 +171,8 @@ namespace SimpleLanguage
             regions.Add(new Region(new List<Region>() { regions[BlockToRegion[bodyBlock]] },
                                     new List<(Region, Region)>() { (regions[BlockToRegion[bodyBlock]], regions[BlockToRegion[bodyBlock]]) }));
             BlockToRegion.Add(cycleBlock, regions.Count - 1);
-            children.Remove(bodyBlock);
-            blocks.Remove(bodyBlock);
+            _ = children.Remove(bodyBlock);
+            _ = blocks.Remove(bodyBlock);
             curID++;
 
             for (var i = 0; i < cycles.Count; i++)

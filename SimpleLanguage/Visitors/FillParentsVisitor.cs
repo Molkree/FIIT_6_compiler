@@ -7,12 +7,12 @@ namespace SimpleLanguage.Visitors
     {
         private readonly Stack<Node> st = new Stack<Node>();
 
-        public override void PreVisit(Node n)
+        public override void PreVisit(Node node)
         {
-            n.Parent = st.Count != 0 ? st.Peek() : null;
-            st.Push(n);
+            node.Parent = st.Count != 0 ? st.Peek() : null;
+            st.Push(node);
         }
 
-        public override void PostVisit(Node n) => st.Pop();
+        public override void PostVisit(Node node) => st.Pop();
     }
 }

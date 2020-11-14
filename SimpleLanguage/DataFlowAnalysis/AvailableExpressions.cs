@@ -76,7 +76,7 @@ namespace SimpleLanguage
         {
             TransferFunction = new AvailableExpressionTransferFunc(graph).Transfer;
             var inOutData = base.Execute(graph);
-            var outBlock = graph.GetCurrentBasicBlocks().Last();
+            var outBlock = graph.GetCurrentBasicBlocks()[graph.GetCurrentBasicBlocks().Count - 1];
             if (graph.GetParentsBasicBlocks(graph.VertexOf(outBlock)).Count == 0)
             {
                 inOutData[outBlock] = (new List<OneExpression>(), new List<OneExpression>());
@@ -91,7 +91,6 @@ namespace SimpleLanguage
     /// </summary>
     public class AvailableExpressionTransferFunc
     {
-        public static List<OneExpression> UniversalSet;
         private readonly Dictionary<BasicBlock, List<OneExpression>> e_gen;
         private readonly Dictionary<BasicBlock, List<OneExpression>> e_kill;
         private static readonly List<string> operationTypes = new List<string>
@@ -112,6 +111,8 @@ namespace SimpleLanguage
             "UNMINUS"
         };
 
+        public static List<OneExpression> UniversalSet { get; set; }
+
         public AvailableExpressionTransferFunc(ControlFlowGraph graph)
         {
             e_gen = new Dictionary<BasicBlock, List<OneExpression>>();
@@ -123,7 +124,7 @@ namespace SimpleLanguage
         public List<OneExpression> Transfer(BasicBlock basicBlock, List<OneExpression> input)
             => E_gen_join(basicBlock, In_minus_e_kill(basicBlock, input));
 
-        private List<OneExpression> GetU(ControlFlowGraph graph)
+        private static void GetU(ControlFlowGraph graph)
         {
             foreach (var block in graph.GetCurrentBasicBlocks())
             {
@@ -139,7 +140,6 @@ namespace SimpleLanguage
                     }
                 }
             }
-            return UniversalSet;
         }
 
         private void Initialization(ControlFlowGraph graph)
@@ -157,7 +157,7 @@ namespace SimpleLanguage
             {
                 if (result.Contains(expression))
                 {
-                    result.Remove(expression);
+                    _ = result.Remove(expression);
                 }
             }
             return result;
@@ -190,11 +190,6 @@ namespace SimpleLanguage
                         {
                             s.Add(newExpr);
                         }
-                        s.Where(expression => expression.ContainsVariable(instruction.Result));
-                    }
-                    if (instruction.Operation == "assign")
-                    {
-                        s.Where(expression => expression.ContainsVariable(instruction.Result));
                     }
                 }
                 e_gen.Add(block, s);
@@ -221,7 +216,7 @@ namespace SimpleLanguage
                 }
                 foreach (var genExpression in e_gen[block])
                 {
-                    K.Remove(genExpression);
+                    _ = K.Remove(genExpression);
                 }
                 e_kill.Add(block, K);
             }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using ProgramTree;
 
 namespace SimpleLanguage.Visitors
@@ -16,7 +17,7 @@ namespace SimpleLanguage.Visitors
                 GenCommand("", "noop", "", "", "");
             }
             l.Stat.Visit(this);
-            Instructions[instructionIndex].Label = l.Label.Num.ToString();
+            Instructions[instructionIndex].Label = l.Label.Num.ToString(CultureInfo.InvariantCulture);
         }
 
         public override void VisitAssignNode(AssignNode a)
@@ -25,7 +26,7 @@ namespace SimpleLanguage.Visitors
             GenCommand("", "assign", argument1, "", a.Id.Name);
         }
 
-        private string GenEndLabel(IfElseNode i)
+        private static string GenEndLabel(IfElseNode i)
         {
             Node parent, curNode;
             if (i.Parent is LabelStatementNode)
@@ -41,12 +42,12 @@ namespace SimpleLanguage.Visitors
             var ifIndex = parent.StatChildren.IndexOf(curNode as StatementNode);
             return parent.StatChildren.Count > ifIndex + 1 ? // next statement exists
                 (parent.StatChildren[ifIndex + 1] is LabelStatementNode nextLabelNode) ? // next statement has label
-                nextLabelNode.Label.Num.ToString() :
+                nextLabelNode.Label.Num.ToString(CultureInfo.InvariantCulture) :
                 ThreeAddressCodeTmp.GenTmpLabel() :
                 ThreeAddressCodeTmp.GenTmpLabel();
         }
 
-        private bool InvertIfExpression(IfElseNode i)
+        private static bool InvertIfExpression(IfElseNode i)
         {
             if (i.Expr is BoolValNode boolValNode)
             {
@@ -130,10 +131,10 @@ namespace SimpleLanguage.Visitors
             {
                 exprTmpName = Gen(i.Expr);
                 var trueLabel = i.TrueStat is LabelStatementNode label
-                   ? label.Label.Num.ToString()
+                   ? label.Label.Num.ToString(CultureInfo.InvariantCulture)
                    : i.TrueStat is BlockNode block
                        && block.List.StatChildren[0] is LabelStatementNode labelB
-                       ? labelB.Label.Num.ToString()
+                       ? labelB.Label.Num.ToString(CultureInfo.InvariantCulture)
                        : ThreeAddressCodeTmp.GenTmpLabel();
 
                 GenCommand("", "ifgoto", exprTmpName, trueLabel, "");
@@ -148,15 +149,15 @@ namespace SimpleLanguage.Visitors
                 Instructions[instructionIndex].Label = trueLabel;
             }
 
-            if (endLabel.StartsWith("L"))
+            if (endLabel.StartsWith("L", System.StringComparison.Ordinal))
             {
                 GenCommand(endLabel, "noop", "", "", "");
             }
         }
 
-        public override void VisitEmptyNode(EmptyNode w) => GenCommand("", "noop", "", "", "");
+        public override void VisitEmptyNode(EmptyNode e) => GenCommand("", "noop", "", "", "");
 
-        public override void VisitGotoNode(GotoNode g) => GenCommand("", "goto", g.Label.Num.ToString(), "", "");
+        public override void VisitGotoNode(GotoNode g) => GenCommand("", "goto", g.Label.Num.ToString(CultureInfo.InvariantCulture), "", "");
 
         public override void VisitWhileNode(WhileNode w)
         {
@@ -165,10 +166,10 @@ namespace SimpleLanguage.Visitors
 
             var whileHeadLabel = ThreeAddressCodeTmp.GenTmpLabel();
             var whileBodyLabel = w.Stat is LabelStatementNode label
-                ? label.Label.Num.ToString()
+                ? label.Label.Num.ToString(CultureInfo.InvariantCulture)
                 : w.Stat is BlockNode block
                                 && block.List.StatChildren[0] is LabelStatementNode labelB
-                    ? labelB.Label.Num.ToString()
+                    ? labelB.Label.Num.ToString(CultureInfo.InvariantCulture)
                     : ThreeAddressCodeTmp.GenTmpLabel();
 
             var exitLabel = ThreeAddressCodeTmp.GenTmpLabel();
@@ -179,7 +180,7 @@ namespace SimpleLanguage.Visitors
                 GenCommand("", "noop", "", "", "");
             }
 
-            Instructions[Instructions.Count - 1].Label = whileHeadLabel;
+            Instructions[^1].Label = whileHeadLabel;
 
             GenCommand("", "ifgoto", exprTmpName, whileBodyLabel, "");
             GenCommand("", "goto", exitLabel, "", "");
@@ -249,7 +250,7 @@ namespace SimpleLanguage.Visitors
             }
             else if (ex is IntNumNode intNum)
             {
-                return intNum.Num.ToString();
+                return intNum.Num.ToString(CultureInfo.InvariantCulture);
             }
             else if (ex is BoolValNode bl)
             {

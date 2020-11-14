@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.LoopsInCFG
 {
@@ -132,7 +131,7 @@ goto 1;
             AssertSet(expected, actual);
         }
 
-        private void AssertSet(
+        private static void AssertSet(
             List<List<BasicBlock>> expected,
             IReadOnlyList<IReadOnlyList<BasicBlock>> actual)
         {

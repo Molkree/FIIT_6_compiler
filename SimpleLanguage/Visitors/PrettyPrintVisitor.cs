@@ -1,53 +1,37 @@
 ﻿using System;
+using System.Globalization;
 using ProgramTree;
 
 namespace SimpleLanguage.Visitors
 {
     public class PrettyPrintVisitor : Visitor
     {
-        public string Text = "";
-        private int Indent = 0;
+        public string Text { get; set; } = "";
+        private int Indent;
 
         private string IndentStr() => new string(' ', Indent);
         private void IndentPlus() => Indent += 4;
         private void IndentMinus() => Indent -= 4;
         public override void VisitIdNode(IdNode id) => Text += id.Name;
-        public override void VisitIntNumNode(IntNumNode num) => Text += num.Num.ToString();
+        public override void VisitIntNumNode(IntNumNode num) => Text += num.Num.ToString(CultureInfo.CurrentCulture);
 
-        private string GetOp(OpType t)
+        private static string GetOp(OpType t) => t switch
         {
-            switch (t)
-            {
-                case OpType.OR:
-                    return "or";
-                case OpType.AND:
-                    return "and";
-                case OpType.EQUAL:
-                    return "==";
-                case OpType.NOTEQUAL:
-                    return "!=";
-                case OpType.GREATER:
-                    return ">";
-                case OpType.LESS:
-                    return "<";
-                case OpType.EQGREATER:
-                    return ">=";
-                case OpType.EQLESS:
-                    return "<=";
-                case OpType.PLUS:
-                    return "+";
-                case OpType.MINUS:
-                case OpType.UNMINUS:
-                    return "-";
-                case OpType.MULT:
-                    return "*";
-                case OpType.DIV:
-                    return "/";
-                case OpType.NOT:
-                    return "!";
-            }
-            throw new ArgumentException();
-        }
+            OpType.OR => "or",
+            OpType.AND => "and",
+            OpType.EQUAL => "==",
+            OpType.NOTEQUAL => "!=",
+            OpType.GREATER => ">",
+            OpType.LESS => "<",
+            OpType.EQGREATER => ">=",
+            OpType.EQLESS => "<=",
+            OpType.PLUS => "+",
+            OpType.MINUS or OpType.UNMINUS => "-",
+            OpType.MULT => "*",
+            OpType.DIV => "/",
+            OpType.NOT => "!",
+            _ => throw new ArgumentException("Unknown operation"),
+        };
 
         public override void VisitBinOpNode(BinOpNode binop)
         {
@@ -97,12 +81,12 @@ namespace SimpleLanguage.Visitors
             }
         }
 
-        public override void VisitVarListNode(VarListNode w)
+        public override void VisitVarListNode(VarListNode varList)
         {
-            Text += IndentStr() + "var " + w.vars[0].Name;
-            for (var i = 1; i < w.vars.Count; i++)
+            Text += IndentStr() + "var " + varList.Vars[0].Name;
+            for (var i = 1; i < varList.Vars.Count; i++)
             {
-                Text += ", " + w.vars[i].Name;
+                Text += ", " + varList.Vars[i].Name;
             }
             Text += ";";
         }
@@ -224,6 +208,6 @@ namespace SimpleLanguage.Visitors
             Text += ");";
         }
 
-        public override void VisitBoolValNode(BoolValNode b) => Text += b.Val.ToString().ToLower();
+        public override void VisitBoolValNode(BoolValNode b) => Text += b.Val.ToString().ToLower(CultureInfo.CurrentCulture);
     }
 }

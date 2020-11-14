@@ -101,7 +101,7 @@ namespace SimpleLanguage
 
             if (toAddLast)
             {
-                var lastCommand = commandsTmp[commandsTmp.Count - 1];
+                var lastCommand = commandsTmp[^1];
                 var toSkip = lastCommand.Operation == "noop" && lastCommand.Label == "";
                 if (toSkip)
                 {
@@ -109,7 +109,7 @@ namespace SimpleLanguage
                 }
                 else
                 {
-                    result.Add(commandsTmp[commandsTmp.Count - 1]);
+                    result.Add(commandsTmp[^1]);
                 }
             }
             return (wasChanged, result);

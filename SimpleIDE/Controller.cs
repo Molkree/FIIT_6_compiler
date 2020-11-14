@@ -115,7 +115,7 @@ namespace SimpleIDE
                     allAllOpt.Add(AllCodeOptimizations[n - numPos]);
                 }
 
-                var UCE = lstCheck[lstCheck.Count - 1] == numPosFalse;
+                var UCE = lstCheck[^1] == numPosFalse;
 
                 var result = ThreeAddressCodeOptimizer.Optimize(threeAddressCode,
                         bBlOpt, allCodeOpt, UCE).ToList();
@@ -123,7 +123,7 @@ namespace SimpleIDE
                 var strR = new StringBuilder();
                 foreach (var x in result)
                 {
-                    strR.AppendLine(x.ToString());
+                    _ = strR.AppendLine(x.ToString());
                 }
                 return (strR.ToString(), threeAddressCode);
             }
@@ -131,7 +131,7 @@ namespace SimpleIDE
             var str = new StringBuilder();
             foreach (var x in threeAddressCode)
             {
-                str.AppendLine(x.ToString());
+                _ = str.AppendLine(x.ToString());
             }
 
             return (str.ToString(), threeAddressCode);
@@ -146,21 +146,21 @@ namespace SimpleIDE
 
             foreach (var block in cfg.GetCurrentBasicBlocks())
             {
-                str.AppendLine($"{cfg.VertexOf(block)} --------");
+                _ = str.AppendLine($"{cfg.VertexOf(block)} --------");
                 foreach (var inst in block.GetInstructions())
                 {
-                    str.AppendLine(inst.ToString());
+                    _ = str.AppendLine(inst.ToString());
                 }
-                str.AppendLine($"----------");
+                _ = str.AppendLine($"----------");
 
                 var children = cfg.GetChildrenBasicBlocks(cfg.VertexOf(block));
 
                 var childrenStr = string.Join(" | ", children.Select(v => v.vertex));
-                str.AppendLine($" children: {childrenStr}");
+                _ = str.AppendLine($" children: {childrenStr}");
 
                 var parents = cfg.GetParentsBasicBlocks(cfg.VertexOf(block));
                 var parentsStr = string.Join(" | ", parents.Select(v => v.vertex));
-                str.AppendLine($" parents: {parentsStr}\r\n");
+                _ = str.AppendLine($" parents: {parentsStr}\r\n");
             }
 
             return (str.ToString(), cfg);
@@ -170,61 +170,61 @@ namespace SimpleIDE
         {
             var str = new StringBuilder();
 
-            str.AppendLine("Доминаторы:");
+            _ = str.AppendLine("Доминаторы:");
             var domTree = new DominatorTree().GetDominators(cfg);
 
             foreach (var pair in domTree)
             {
                 foreach (var x in pair.Value)
                 {
-                    str.AppendLine($"{cfg.VertexOf(x)} dom {cfg.VertexOf(pair.Key)}");
+                    _ = str.AppendLine($"{cfg.VertexOf(x)} dom {cfg.VertexOf(pair.Key)}");
                 }
-                str.AppendLine("----------------");
+                _ = str.AppendLine("----------------");
             }
 
 
-            str.AppendLine("\r\nКлассификация рёбер:");
+            _ = str.AppendLine("\r\nКлассификация рёбер:");
 
             foreach (var pair in cfg.ClassifiedEdges)
             {
-                str.AppendLine($"{ pair }");
+                _ = str.AppendLine($"{ pair }");
             }
 
-            str.AppendLine("\r\nОбходы графа:");
+            _ = str.AppendLine("\r\nОбходы графа:");
 
-            str.AppendLine($"Прямой: { string.Join(" -> ", cfg.PreOrderNumeration) }");
-            str.AppendLine($"Обратный: { string.Join(" -> ", cfg.PostOrderNumeration) }");
+            _ = str.AppendLine($"Прямой: { string.Join(" -> ", cfg.PreOrderNumeration) }");
+            _ = str.AppendLine($"Обратный: { string.Join(" -> ", cfg.PostOrderNumeration) }");
 
-            str.AppendLine($"\r\nГлубинное остовное дерево:");
+            _ = str.AppendLine($"\r\nГлубинное остовное дерево:");
             foreach (var (from, to) in cfg.DepthFirstSpanningTree)
             {
-                str.AppendLine($"({from} - > {to})");
+                _ = str.AppendLine($"({from} - > {to})");
             }
 
             var backEdges = cfg.GetBackEdges();
             if (backEdges.Count > 0)
             {
-                str.AppendLine("\r\nОбратные рёбра:");
+                _ = str.AppendLine("\r\nОбратные рёбра:");
                 foreach (var x in backEdges)
                 {
-                    str.AppendLine($"({cfg.VertexOf(x.Item1)}, {cfg.VertexOf(x.Item2)})");
+                    _ = str.AppendLine($"({cfg.VertexOf(x.Item1)}, {cfg.VertexOf(x.Item2)})");
                 }
             }
             else
             {
-                str.AppendLine("\r\nОбратных рёбер нет");
+                _ = str.AppendLine("\r\nОбратных рёбер нет");
             }
 
 
             var answ = cfg.IsReducibleGraph() ? "Граф приводим" : "Граф неприводим";
-            str.AppendLine($"\r\n{answ}");
+            _ = str.AppendLine($"\r\n{answ}");
 
             if (cfg.IsReducibleGraph())
             {
                 var natLoops = NaturalLoop.GetAllNaturalLoops(cfg);
                 if (natLoops.Count > 0)
                 {
-                    str.AppendLine($"\r\nЕстественные циклы:");
+                    _ = str.AppendLine($"\r\nЕстественные циклы:");
                     foreach (var x in natLoops)
                     {
                         if (x.Count == 0)
@@ -233,24 +233,24 @@ namespace SimpleIDE
                         }
                         for (var i = 0; i < x.Count; i++)
                         {
-                            str.AppendLine($"Номер блока: {i}");
+                            _ = str.AppendLine($"Номер блока: {i}");
                             foreach (var xfrom in x[i].GetInstructions())
                             {
-                                str.AppendLine(xfrom.ToString());
+                                _ = str.AppendLine(xfrom.ToString());
                             }
                         }
-                        str.AppendLine();
-                        str.AppendLine("-------------");
+                        _ = str.AppendLine();
+                        _ = str.AppendLine("-------------");
                     }
                 }
                 else
                 {
-                    str.AppendLine($"\r\nЕстественных циклов нет");
+                    _ = str.AppendLine($"\r\nЕстественных циклов нет");
                 }
             }
             else
             {
-                str.AppendLine($"\r\nНевозможно определить естественные циклы, т.к. граф неприводим");
+                _ = str.AppendLine($"\r\nНевозможно определить естественные циклы, т.к. граф неприводим");
             }
 
             return str.ToString();
@@ -266,9 +266,9 @@ namespace SimpleIDE
             {
                 foreach (var inst in b.GetInstructions())
                 {
-                    strBefore.AppendLine(inst.ToString());
+                    _ = strBefore.AppendLine(inst.ToString());
                 }
-                strBefore.AppendLine("----------");
+                _ = strBefore.AppendLine("----------");
             }
 
             foreach (var opt in opts)
@@ -283,8 +283,9 @@ namespace SimpleIDE
                         LiveVariablesOptimization.DeleteDeadCode(cfg);
                         break;
                     case "Достигающие определения":
-                        var reachDef = new ReachingDefinitionsOptimization();
-                        reachDef.DeleteDeadCode(cfg);
+                        ReachingDefinitionsOptimization.DeleteDeadCode(cfg);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -294,9 +295,9 @@ namespace SimpleIDE
             {
                 foreach (var inst in b.GetInstructions())
                 {
-                    strReturn.AppendLine(inst.ToString());
+                    _ = strReturn.AppendLine(inst.ToString());
                 }
-                strReturn.AppendLine("----------");
+                _ = strReturn.AppendLine("----------");
             }
 
             return (strBefore.ToString(), strReturn.ToString());

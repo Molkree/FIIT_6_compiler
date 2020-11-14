@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.DataFlowAnalysis
 {
@@ -24,9 +23,9 @@ e = zz + i;
             var graph = GenCFG(program);
             var algorithm = new AvailableExpressions();
 
-            algorithm.Execute(graph);
+            _ = algorithm.Execute(graph);
             var iterationsFast = algorithm.Iterations;
-            algorithm.Execute(graph, false);
+            _ = algorithm.Execute(graph, false);
             var iterationsSlow = algorithm.Iterations;
 
             Assert.LessOrEqual(iterationsFast, iterationsSlow);
@@ -49,9 +48,9 @@ a = x;
             var graph = GenCFG(program);
             var algorithm = new ConstantPropagation();
 
-            algorithm.Execute(graph);
+            _ = algorithm.Execute(graph);
             var iterationsFast = algorithm.Iterations;
-            algorithm.Execute(graph, false);
+            _ = algorithm.Execute(graph, false);
             var iterationsSlow = algorithm.Iterations;
 
             Assert.LessOrEqual(iterationsFast, iterationsSlow);
@@ -83,9 +82,9 @@ print(c + a + b);
             var graph = GenCFG(program);
             var algorithm = new LiveVariables();
 
-            algorithm.Execute(graph);
+            _ = algorithm.Execute(graph);
             var iterationsFast = algorithm.Iterations;
-            algorithm.Execute(graph, false);
+            _ = algorithm.Execute(graph, false);
             var iterationsSlow = algorithm.Iterations;
 
             Assert.LessOrEqual(iterationsFast, iterationsSlow);
@@ -113,9 +112,9 @@ for k = 0, 1
             var graph = GenCFG(program);
             var algorithm = new LiveVariables();
 
-            algorithm.Execute(graph);
+            _ = algorithm.Execute(graph);
             var iterationsFast = algorithm.Iterations;
-            algorithm.Execute(graph, false);
+            _ = algorithm.Execute(graph, false);
             var iterationsSlow = algorithm.Iterations;
 
             Assert.LessOrEqual(iterationsFast, iterationsSlow);
@@ -137,9 +136,9 @@ a = 2;
             var graph = GenCFG(program);
             var algorithm = new DominatorTree();
 
-            algorithm.Execute(graph);
+            _ = algorithm.Execute(graph);
             var iterationsFast = algorithm.Iterations;
-            algorithm.Execute(graph, false);
+            _ = algorithm.Execute(graph, false);
             var iterationsSlow = algorithm.Iterations;
 
             Assert.LessOrEqual(iterationsFast, iterationsSlow);

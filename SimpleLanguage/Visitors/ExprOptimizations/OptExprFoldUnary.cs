@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprFoldUnary : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is BinOpNode binOpNode)
+            if (node is BinOpNode binOpNode)
             {
                 var left = binOpNode.Left as UnOpNode;
                 var right = binOpNode.Right as UnOpNode;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.TAC.Simple
 {
@@ -152,7 +151,7 @@ goto 1;
             AssertSet(expected, actual);
         }
 
-        private void AssertSet(
+        private static void AssertSet(
              List<BasicBlock> expected,
              List<BasicBlock> actual)
         {

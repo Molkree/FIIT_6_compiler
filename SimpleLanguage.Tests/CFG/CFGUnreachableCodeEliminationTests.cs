@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using SimpleLanguage;
 
 namespace SimpleLanguage.Tests.CFG
 {
@@ -187,7 +186,7 @@ c = b == 53;
             AssertSet(expected, actual.Skip(1).Take(actual.Count - 2).ToArray());
         }
 
-        private void AssertSet(
+        private static void AssertSet(
             BasicBlock[] expected,
             BasicBlock[] actual)
         {

@@ -4,9 +4,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprWithOperationsBetweenConsts : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is BinOpNode binop)
+            if (node is BinOpNode binop)
             {
                 if (binop.Left is IntNumNode lbn && binop.Right is IntNumNode rbn)
                 {

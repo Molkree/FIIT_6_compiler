@@ -5,9 +5,9 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprTransformUnaryToValue : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
-            if (n is UnOpNode unOpNode)
+            if (node is UnOpNode unOpNode)
             {
                 if (unOpNode.Expr is IntNumNode num)
                 {

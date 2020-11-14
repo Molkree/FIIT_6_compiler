@@ -4,13 +4,13 @@ namespace SimpleLanguage.Visitors
 {
     public class OptExprEqualBoolNum : ChangeVisitor
     {
-        public override void PostVisit(Node n)
+        public override void PostVisit(Node node)
         {
             // 5 == 5 -> true
             // 5 == 6 -> false
             // false == false -> true
             // true == false -> false
-            if (n is BinOpNode binop && binop.Op == OpType.EQUAL)
+            if (node is BinOpNode binop && binop.Op == OpType.EQUAL)
             {
                 if (binop.Left is IntNumNode intValLeft && binop.Right is IntNumNode intValRight)
                 {
