@@ -7,7 +7,7 @@ namespace SimpleLanguage.Visitors
     public class PrettyPrintVisitor : Visitor
     {
         public string Text { get; set; } = "";
-        private int Indent = 0;
+        private int Indent;
 
         private string IndentStr() => new string(' ', Indent);
         private void IndentPlus() => Indent += 4;
@@ -15,40 +15,23 @@ namespace SimpleLanguage.Visitors
         public override void VisitIdNode(IdNode id) => Text += id.Name;
         public override void VisitIntNumNode(IntNumNode num) => Text += num.Num.ToString(CultureInfo.CurrentCulture);
 
-        private string GetOp(OpType t)
+        private static string GetOp(OpType t) => t switch
         {
-            switch (t)
-            {
-                case OpType.OR:
-                    return "or";
-                case OpType.AND:
-                    return "and";
-                case OpType.EQUAL:
-                    return "==";
-                case OpType.NOTEQUAL:
-                    return "!=";
-                case OpType.GREATER:
-                    return ">";
-                case OpType.LESS:
-                    return "<";
-                case OpType.EQGREATER:
-                    return ">=";
-                case OpType.EQLESS:
-                    return "<=";
-                case OpType.PLUS:
-                    return "+";
-                case OpType.MINUS:
-                case OpType.UNMINUS:
-                    return "-";
-                case OpType.MULT:
-                    return "*";
-                case OpType.DIV:
-                    return "/";
-                case OpType.NOT:
-                    return "!";
-            }
-            throw new ArgumentException();
-        }
+            OpType.OR => "or",
+            OpType.AND => "and",
+            OpType.EQUAL => "==",
+            OpType.NOTEQUAL => "!=",
+            OpType.GREATER => ">",
+            OpType.LESS => "<",
+            OpType.EQGREATER => ">=",
+            OpType.EQLESS => "<=",
+            OpType.PLUS => "+",
+            OpType.MINUS or OpType.UNMINUS => "-",
+            OpType.MULT => "*",
+            OpType.DIV => "/",
+            OpType.NOT => "!",
+            _ => throw new ArgumentException("Unknown operation"),
+        };
 
         public override void VisitBinOpNode(BinOpNode binop)
         {
@@ -98,12 +81,12 @@ namespace SimpleLanguage.Visitors
             }
         }
 
-        public override void VisitVarListNode(VarListNode w)
+        public override void VisitVarListNode(VarListNode v)
         {
-            Text += IndentStr() + "var " + w.Vars[0].Name;
-            for (var i = 1; i < w.Vars.Count; i++)
+            Text += IndentStr() + "var " + v.Vars[0].Name;
+            for (var i = 1; i < v.Vars.Count; i++)
             {
-                Text += ", " + w.Vars[i].Name;
+                Text += ", " + v.Vars[i].Name;
             }
             Text += ";";
         }

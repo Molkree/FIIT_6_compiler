@@ -20,7 +20,7 @@ namespace SimpleLanguage.Visitors
         public virtual void VisitVarListNode(VarListNode v) { }
         public virtual void VisitGotoNode(GotoNode g) { }
         public virtual void VisitLabelstatementNode(LabelStatementNode l) { }
-        public virtual void VisitBlockNode(BlockNode b) { }
-        public virtual void VisitEmptyNode(EmptyNode w) { }
+        public virtual void VisitBlockNode(BlockNode bl) { }
+        public virtual void VisitEmptyNode(EmptyNode e) { }
     }
 }
